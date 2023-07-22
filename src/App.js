@@ -7,16 +7,21 @@ import Users from "./pages/users-page/users";
 import CameraPage from "./pages/camera-page/camera-page";
 import StatisticPage from "./pages/statistic-page/statistic-page";
 function App() {
+  const mainURl = `http://192.168.110.235:23456/`;
+
   return (
     <>
       <Routes>
-        <Route path="/" exact element={<LoginPage />} />
+        <Route path="/" exact element={<LoginPage mainURl={mainURl} />} />
         <Route path="/loading" exact element={<LoadinPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/camera" element={<CameraPage />} />
-        <Route path="/statistic" element={<StatisticPage />} />
+        <Route path="/login" element={<LoginPage mainURl={mainURl} />} />
+        <Route path="/profile" element={<ProfilePage mainURl={mainURl} />} />
+        <Route path="/users" element={<Users mainURl={mainURl} />} />
+        <Route path="/camera" element={<CameraPage mainURl={mainURl} />} />
+        <Route
+          path="/statistic"
+          element={<StatisticPage mainURl={mainURl} />}
+        />
       </Routes>
     </>
   );

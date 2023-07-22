@@ -5,7 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Snackbar from "../../components/snack-bar/snack-bar";
 
-function LoginPage() {
+function LoginPage({ mainURl }) {
   const [idNumber, setIdNumber] = useState();
   const [password, setPassword] = useState();
   const [hidedSnack, setHidedSnack] = useState(true);
@@ -24,7 +24,7 @@ function LoginPage() {
     });
 
     let reqOptions = {
-      url: "http://192.168.110.235:12345/api/login/",
+      url: `${mainURl}api/login/`,
       method: "POST",
       headers: headersList,
       data: bodyContent,
