@@ -1,0 +1,343 @@
+.profile_page {
+  width: 100%;
+}
+
+.right_sidebar {
+  width: 350px;
+}
+.profile_sidebar {
+  margin-top: -50px !important;
+}
+
+.sidebar_content {
+  width: 300px;
+  height: 90vh;
+  z-index: 333;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  position: fixed;
+  left: -220px;
+  transition: all 0.4s ease;
+}
+
+.chevron_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: absolute;
+  right: -16px;
+  top: 10px;
+  transition: all 0.4s ease;
+}
+.hided_sidebar {
+  left: -608px;
+  transition: all 0.4s ease;
+}
+.chevron_btn_hided {
+  right: -40px;
+  transition: all 0.4s ease;
+}
+.sidebar_links {
+  padding: 10px;
+}
+
+.sidebar_wrapper {
+  transform: rotate(-270deg);
+  width: 100vh;
+  margin-top: 225px;
+  height: 400px;
+  z-index: 111;
+  background: transparent;
+}
+.sidebar_wrapper .editor-field__container {
+  height: 383px;
+}
+.right_sidebar .editor-field__container {
+  background: #0f1020;
+}
+.sidebar_opener {
+  width: 150px;
+  height: 32px;
+  cursor: pointer;
+  bottom: 16px;
+  font-size: 17px;
+  font-weight: 600;
+  text-align: center;
+  padding-left: 40px;
+}
+.sidebar_wrapper .editor-field__label-container:after {
+  bottom: 17px;
+}
+.sidebar_content_items {
+  position: absolute;
+  left: -60px;
+  top: 110px;
+  width: 350px;
+  transform: rotate(270deg);
+}
+
+.sidebar_content_link p {
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1.25px;
+  font-weight: 600;
+  padding: 0 24px 0 16px;
+  color: #4ac5ff;
+  font-family: Goldman;
+  cursor: pointer;
+}
+.sidebar_wrapper .editor-field__container {
+  border: 4px solid #4ac5ff;
+}
+
+.wrapper {
+  width: 100%;
+  position: relative;
+  box-shadow: 5px 5px 25px rgba(0, 177, 227, 0.31);
+}
+
+.cyber_block {
+  -webkit-clip-path: polygon(
+    0% 0%,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% 100%,
+    95% 100%,
+    calc(0% + 8px) 100%,
+    0% calc(100% - 8px),
+    0% calc(100% + 8px)
+  );
+  clip-path: polygon(
+    0% 0%,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% 100%,
+    95% 100%,
+    calc(0% + 8px) 100%,
+    0% calc(100% - 8px),
+    0% calc(100% + 8px)
+  );
+  border: 2px solid #4ac5ff;
+  width: 100%;
+  /* margin-top: 20px;
+  margin-right: 20px; */
+  position: relative;
+  padding: 10px;
+  background-color: var(--black-color);
+}
+
+.cyber_block:before,
+.cyber_block:after {
+  content: "";
+  height: 2px;
+  width: 11.5px;
+  background: #4ac5ff;
+  display: block;
+  position: absolute;
+  z-index: 1;
+  transform: rotate(45deg);
+  border-radius: 5px;
+}
+
+.cyber_block:before {
+  right: -3.1px;
+  top: 1.6px;
+}
+
+.cyber_block:after {
+  left: -3.1px;
+  bottom: 1.6px;
+}
+
+.label-container__top,
+.label-container__bottom {
+  position: absolute;
+  top: -14px;
+  left: 0;
+  z-index: 99;
+}
+
+.label-container__bottom {
+  top: unset;
+  left: unset;
+  bottom: -10px;
+  right: 0;
+  transform: rotate(180deg);
+}
+
+.label-container__top:after,
+.label-container__bottom:after {
+  position: absolute;
+  content: "";
+  display: block;
+  height: 2px;
+  width: 32px;
+  background: #4ac5ff;
+  right: -29px;
+  -webkit-clip-path: polygon(0 0, calc(100% - 2px) 0%, 100% 100%, 22% 100%);
+  clip-path: polygon(0 0, calc(100% - 2px) 0%, 100% 100%, 0% 100%);
+  bottom: 2px;
+}
+
+.label-container__bottom:after {
+  bottom: 1px;
+}
+
+.label-container__top .label-inner,
+.label-container__bottom .label-inner {
+  position: relative;
+  display: block;
+  height: 16px;
+  width: auto;
+  background: #4ac5ff;
+  left: 0px;
+  color: #0f1020;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1.25px;
+  font-weight: 600;
+  padding: 0 24px 0 16px;
+  display: flex;
+  align-items: center;
+  -webkit-clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 100%, 0% 100%);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 100%, 0% 100%);
+}
+
+.label-container__bottom .label-inner {
+  height: 10px;
+}
+
+.camera-container {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: row;
+  padding-top: 3%;
+  justify-content: center;
+}
+
+.camera-main-right {
+  width: 16%;
+}
+
+.camera-main-left {
+  width: 20%;
+}
+
+.camera-main-right {
+  position: relative;
+}
+
+.camera-main-right .big_wrapper {
+  position: absolute;
+  transition: all 0.4s;
+  top: 0;
+}
+
+.camera-main-right .big_wrapper:hover {
+  position: absolute;
+  cursor: pointer;
+  z-index: 999;
+}
+
+.camera-main-right .big_wrapper:nth-child(2) {
+  position: absolute;
+  top: 40px;
+  z-index: 99;
+}
+
+/* person datas */
+.person-detected {
+  display: flex;
+  flex-direction: column;
+}
+
+.person-detected .person-datas {
+  line-height: 50px;
+  padding: 10px;
+}
+
+/* loading page*/
+
+.loading_page {
+  position: absolute;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+}
+.big_wrapper .wrapper {
+  border: none;
+  border-bottom-left-radius: 11px;
+  border-top-right-radius: 11px;
+}
+
+.dark_bg_overlay {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #0f1020dd;
+  z-index: 200;
+}
+
+.label-inner {
+  font-family: Goldman;
+  text-transform: uppercase;
+  letter-spacing: 1.25px;
+  text-transform: uppercase;
+}
+
+.cameras_menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.cameras_menu .big_wrapper {
+  width: 100%;
+  cursor: pointer;
+}
+.cameras_menu .big_wrapper * {
+  cursor: pointer;
+}
+
+.cyber_block_inner video {
+  width: 640px;
+  height: 480px;
+}
+
+.center_camera_wrapper {
+  width: 53%;
+  margin: 0 35px;
+}
+.center_camera_wrapper img {
+  width: 100%;
+}
+
+.camera-main-right .big_wrapper {
+  width: 100%;
+}
+
+.cameras_menu {
+  max-height: 81vh;
+ padding-top: 180px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.cameras_menu::-webkit-scrollbar {
+  background-color: transparent;
+  height: 4px;
+  width: 3px;
+}
+.cameras_menu::-webkit-scrollbar-thumb {
+  background: rgba(44, 44, 44, 0.289);
+}

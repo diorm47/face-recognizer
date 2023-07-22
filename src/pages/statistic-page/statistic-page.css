@@ -1,0 +1,29 @@
+.stats_page {
+  width: 100%;
+}
+
+.stats_wrapper {
+  width: 85%;
+  margin: 0 auto;
+  padding-top: 120px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.left_stats_list_items .stats_list_item {
+  width: 400px;
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+.chart-wrap {
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+}
+.right_chart_actions {
+  margin-bottom: 50px;
+}
+.apexcharts-legend-text {
+  color: #fff !important;
+  padding-left: 20px !important;
+}
