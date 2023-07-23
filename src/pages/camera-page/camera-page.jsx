@@ -53,6 +53,7 @@ function CameraPage({ mainURl }) {
       .request(reqOptions)
       .then((response) => {
         setCameras(response.data);
+        setActiveCamera(response.data[0] || null);
       })
       .catch((error) => {
         console.error("Ошибка", error);
@@ -147,6 +148,7 @@ function CameraPage({ mainURl }) {
     setUpdatingCameraData(camera.name);
     setCameraIP(camera.address);
   };
+  console.log(activeCamera);
   return (
     <>
       <Snackbar hidedSnack={hidedSnack} snackBarText={snackBarText} />
@@ -225,29 +227,33 @@ function CameraPage({ mainURl }) {
               </div>
             </div>
           </div>
-          <div className="camera_item_view">
-            <div className="big_wrapper">
-              <div className="wrapper">
-                <div className="label-container__top">
-                  <label htmlFor="" className="label-inner">
-                    ID: {activeCamera.name}
-                  </label>
-                </div>
-                <div className="cyber_block">
-                  <div className="cyber_block_inner">
-                    <img src={activeCamera.address} alt="video_feed" />
+          {activeCamera ? (
+            <div className="camera_item_view">
+              <div className="big_wrapper">
+                <div className="wrapper">
+                  <div className="label-container__top">
+                    <label htmlFor="" className="label-inner">
+                      ID: {activeCamera.name}
+                    </label>
                   </div>
-                </div>
+                  <div className="cyber_block">
+                    <div className="cyber_block_inner">
+                      <img src={activeCamera.address} alt="video_feed" />
+                    </div>
+                  </div>
 
-                <div className="label-container__bottom">
-                  <label htmlFor="" className="label-inner">
-                    {" "}
-                    - - -{" "}
-                  </label>
+                  <div className="label-container__bottom">
+                    <label htmlFor="" className="label-inner">
+                      {" "}
+                      - - -{" "}
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
 

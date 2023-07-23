@@ -5,6 +5,7 @@
   left: 40px;
   transition: all 1s ease;
   z-index: 1111;
+  background: #0f1020;
 }
 
 .hided_snack {

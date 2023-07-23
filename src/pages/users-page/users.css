@@ -98,6 +98,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-top: 40px;
 }
 .form_users {
   width: 550px;
@@ -119,7 +120,7 @@
 .employer_card .employer_left_img {
   width: 100px;
   height: 158px;
- 
+
   margin-right: 15px;
 }
 .employer_card .employer_left_img img {
@@ -164,7 +165,7 @@ input[type="file"]::file-selector-button {
 .file_ipload_input .big_wrapper,
 .file_ipload_input .wrapper,
 .file_ipload_input .cyber_block {
-  width: 200px;
+  width: 160px;
   min-height: 150px;
 }
 
@@ -174,4 +175,9 @@ input[type="file"]::file-selector-button {
 
 .right_employer_input input {
   visibility: hidden;
+}
+
+.user_actions {
+  right: 0;
+  top: -16px;
 }

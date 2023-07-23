@@ -8,15 +8,19 @@ function Users({ mainURl }) {
   const [isFormVisible, setFormVisible] = useState(false);
   const [employeesList, setEmployeesList] = useState(false);
   const [isSideBarVisible, setSidebarVisible] = useState(false);
+  const [isUserUpdating, setUserUpdating] = useState(false);
   const [hidedSnack, setHidedSnack] = useState(true);
   const [snackBarText, setSnackBarText] = useState("");
+  const [activeActions, setActiveActions] = useState();
+  const [updatingUserID, setUpdatingUserID] = useState("");
+
+  // Employer data
   const [employerID, setEmployerID] = useState("");
   const [employerRank, setEmployerRank] = useState("");
-
   const [employerPostion, setEmployerPostion] = useState("");
   const [employerName, setEmployerName] = useState("");
   const [employerAvatar, setEmployerAvatar] = useState(null);
-
+  const [employerAvatarForSend, setEmployerAvatarForSend] = useState(null);
   const [employerLastName, setEmployerLastName] = useState("");
   const [employerMiddleName, setEmployerMiddleName] = useState("");
 
@@ -64,30 +68,30 @@ function Users({ mainURl }) {
   const handleModalOverlay = () => {
     setFormVisible(false);
     setSidebarVisible(false);
+    setUserUpdating(false);
   };
   const addEmployer = () => {
-    let bodyContent = JSON.stringify({
-      employee_id: employerID,
-      first_name: employerName,
-      rank: employerRank,
-      position: employerPostion,
-      main_image: employerAvatar,
-      last_name: employerLastName,
-      middle_name: employerMiddleName,
-    });
+    const formData = new FormData();
+    formData.append("employee_id", employerID);
+    formData.append("first_name", employerName);
+    formData.append("rank", employerRank);
+    formData.append("position", employerPostion);
+    formData.append("main_image", employerAvatarForSend || employerAvatar);
+    formData.append("last_name", employerLastName);
+    formData.append("middle_name", employerMiddleName);
 
     let reqOptions = {
       url: `${mainURl}employees/create/`,
       method: "POST",
-      headers: headersList,
-      data: bodyContent,
+
+      data: formData,
     };
 
     axios
       .request(reqOptions)
       .then((response) => {
         setHidedSnack(false);
-        setSnackBarText("Camera qo'shildi");
+        setSnackBarText("Hodim qo'shildi");
         refreshUsersPage();
         setTimeout(() => {
           setHidedSnack(true);
@@ -96,11 +100,13 @@ function Users({ mainURl }) {
       .catch((error) => {
         console.error("Ошибка", error);
       });
+
+    setFormVisible(false);
   };
 
   const saveImage = (e) => {
     const file = e.target.files[0];
-
+    setEmployerAvatarForSend(e.target.files[0]);
     const reader = new FileReader();
 
     reader.onloadend = () => {
@@ -111,10 +117,66 @@ function Users({ mainURl }) {
       reader.readAsDataURL(file);
     }
   };
+  const deleteUser = (id) => {
+    let reqOptions = {
+      url: `${mainURl}employees/${id}/delete/`,
+      method: "DELETE",
+      headers: headersList,
+    };
+
+    axios
+      .request(reqOptions)
+      .then((response) => {
+        setHidedSnack(false);
+        setSnackBarText("Hodim o'chirildi");
+        refreshUsersPage();
+        setTimeout(() => {
+          setHidedSnack(true);
+        }, 3000);
+      })
+      .catch((error) => {
+        console.error("Ошибка", error);
+      });
+  };
+  const updateUserClick = (employer) => {
+    setUpdatingUserID(employer.employee_id);
+    setEmployerID(employer.employee_id);
+    setEmployerRank(employer.rank);
+    setEmployerPostion(employer.position);
+    setEmployerName(employer.first_name);
+    setEmployerAvatar(employer.main_image);
+    setEmployerLastName(employer.last_name);
+    setEmployerMiddleName(employer.middle_name);
+    setUserUpdating(true);
+  };
+  const updateEmployerData = () => {
+    let reqOptions = {
+      url: `${mainURl}employees/${updatingUserID}/delete/`,
+      method: "DELETE",
+      headers: headersList,
+    };
+
+    axios
+      .request(reqOptions)
+      .then(() => {
+        addEmployer();
+      })
+      .then(() => {
+        setHidedSnack(false);
+        setSnackBarText("Hodim ma'lumotlari yangilandi");
+        refreshUsersPage();
+        setTimeout(() => {
+          setHidedSnack(true);
+        }, 3000);
+      })
+      .catch((error) => {
+        console.error("Ошибка", error);
+      });
+  };
   return (
     <>
       <Snackbar hidedSnack={hidedSnack} snackBarText={snackBarText} />
-      {isFormVisible || isSideBarVisible ? (
+      {isFormVisible || isSideBarVisible || isUserUpdating ? (
         <div className="dark_bg_overlay" onClick={handleModalOverlay}></div>
       ) : (
         ""
@@ -138,7 +200,26 @@ function Users({ mainURl }) {
           <div className="users_col">
             {employeesList &&
               employeesList.map((employer) => (
-                <div className="users_list_item" key={employer.employee_id}>
+                <div
+                  className="users_list_item"
+                  key={employer.employee_id}
+                  onMouseEnter={() => setActiveActions(employer.employee_id)}
+                  onMouseLeave={() => setActiveActions("")}
+                >
+                  <div
+                    className={
+                      activeActions === employer.employee_id
+                        ? "camera_item_actions user_actions"
+                        : "camera_item_actions user_actions camera_item_actions_hided"
+                    }
+                  >
+                    <button onClick={() => updateUserClick(employer)}>
+                      tahrirlash
+                    </button>
+                    <button onClick={() => deleteUser(employer.employee_id)}>
+                      o'chirish
+                    </button>
+                  </div>
                   <div className="big_wrapper">
                     <div className="wrapper">
                       <div className="label-container__top">
@@ -190,822 +271,6 @@ function Users({ mainURl }) {
                   </div>
                 </div>
               ))}
-          </div>
-          <div className="users_col">
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="users_col">
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="users_col">
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="users_list_item">
-              <div className="big_wrapper">
-                <div className="wrapper">
-                  <div className="label-container__top">
-                    <label htmlFor="" className="label-inner">
-                      User
-                    </label>
-                  </div>
-                  <div className="cyber_block">
-                    <div className="cyber_block_inner">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Iusto impedit assumenda quo maiores excepturi sequi,
-                      praesentium non asperiores dolores in, quas eius
-                      voluptatum quisquam. Excepturi laboriosam aliquid sapiente
-                      at recusandae.
-                    </div>
-                  </div>
-
-                  <div className="label-container__bottom">
-                    <label htmlFor="" className="label-inner">
-                      {" "}
-                      - - -{" "}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -1214,6 +479,222 @@ function Users({ mainURl }) {
                   <div
                     className="btn btn--primary login_btn"
                     onClick={addEmployer}
+                  >
+                    <div className="btn__container">Saqlash</div>
+                    <div className="btn__bottom"></div>
+                    <div className="btn__noise"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {!isUserUpdating || (
+        <div className="add_user_from">
+          <div className="form_users">
+            <div className="big_wrapper">
+              <div className="wrapper">
+                <div className="label-container__top">
+                  <label htmlFor="" className="label-inner">
+                    ID
+                  </label>
+                </div>
+                <div className="cyber_block">
+                  <div className="cyber_block_inner">
+                    <input
+                      type="text"
+                      className="editor-field__input"
+                      value={employerID}
+                      onChange={(e) => setEmployerID(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="label-container__bottom">
+                  <label htmlFor="" className="label-inner">
+                    {" "}
+                    - - -{" "}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="big_wrapper">
+              <div className="wrapper">
+                <div className="label-container__top">
+                  <label htmlFor="" className="label-inner">
+                    Unvon
+                  </label>
+                </div>
+                <div className="cyber_block">
+                  <div className="cyber_block_inner">
+                    <input
+                      type="text"
+                      className="editor-field__input"
+                      value={employerRank}
+                      onChange={(e) => setEmployerRank(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="label-container__bottom">
+                  <label htmlFor="" className="label-inner">
+                    {" "}
+                    - - -{" "}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="big_wrapper">
+              <div className="wrapper">
+                <div className="label-container__top">
+                  <label htmlFor="" className="label-inner">
+                    Lavozim
+                  </label>
+                </div>
+                <div className="cyber_block">
+                  <div className="cyber_block_inner">
+                    <input
+                      type="text"
+                      className="editor-field__input"
+                      value={employerPostion}
+                      onChange={(e) => setEmployerPostion(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="label-container__bottom">
+                  <label htmlFor="" className="label-inner">
+                    {" "}
+                    - - -{" "}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="big_wrapper">
+              <div className="wrapper">
+                <div className="label-container__top">
+                  <label htmlFor="" className="label-inner">
+                    Ism
+                  </label>
+                </div>
+                <div className="cyber_block">
+                  <div className="cyber_block_inner">
+                    <input
+                      type="text"
+                      className="editor-field__input"
+                      value={employerName}
+                      onChange={(e) => setEmployerName(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="label-container__bottom">
+                  <label htmlFor="" className="label-inner">
+                    {" "}
+                    - - -{" "}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="big_wrapper">
+              <div className="wrapper">
+                <div className="label-container__top">
+                  <label htmlFor="" className="label-inner">
+                    Familiya
+                  </label>
+                </div>
+                <div className="cyber_block">
+                  <div className="cyber_block_inner">
+                    <input
+                      type="text"
+                      className="editor-field__input"
+                      value={employerLastName}
+                      onChange={(e) => setEmployerLastName(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="label-container__bottom">
+                  <label htmlFor="" className="label-inner">
+                    {" "}
+                    - - -{" "}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="big_wrapper">
+              <div className="wrapper">
+                <div className="label-container__top">
+                  <label htmlFor="" className="label-inner">
+                    Ota ismi
+                  </label>
+                </div>
+                <div className="cyber_block">
+                  <div className="cyber_block_inner">
+                    <input
+                      type="text"
+                      className="editor-field__input"
+                      value={employerMiddleName}
+                      onChange={(e) => setEmployerMiddleName(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="label-container__bottom">
+                  <label htmlFor="" className="label-inner">
+                    {" "}
+                    - - -{" "}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="file_ipload_input">
+              <div className="big_wrapper">
+                <div className="wrapper">
+                  <div className="label-container__top">
+                    <label htmlFor="" className="label-inner">
+                      Surati
+                    </label>
+                  </div>
+                  <div className="cyber_block">
+                    <div className="cyber_block_inner employer_img">
+                      {employerAvatar && (
+                        <img src={employerAvatar} alt="user avatar" />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="label-container__bottom">
+                    <label htmlFor="" className="label-inner">
+                      {" "}
+                      - - -{" "}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div className="right_employer_input">
+                <label htmlFor="employer_avatar">
+                  <div className="add_ser_btn save_employer">
+                    <div className="btn btn--primary login_btn">
+                      <div className="btn__container">Yuklash</div>
+                      <div className="btn__bottom"></div>
+                      <div className="btn__noise"></div>
+                    </div>
+                  </div>
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="employer_avatar"
+                  className="editor-field__input"
+                  placeholder="Surat tanlang"
+                  onChange={saveImage}
+                />
+                <div className="add_ser_btn save_employer">
+                  <div
+                    className="btn btn--primary login_btn"
+                    onClick={updateEmployerData}
                   >
                     <div className="btn__container">Saqlash</div>
                     <div className="btn__bottom"></div>
