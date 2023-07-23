@@ -9,6 +9,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-family: Goldman;
   background-color: black;
+  max-height: 760px;
 }
 
 a {

@@ -97,7 +97,7 @@ function ProfilePage({ mainURl }) {
                     </div>
                     <div className="cyber_block">
                       <div className="cyber_block_inner">
-                        <img src={camera} alt="video_feed" />
+                        <img src={camera} alt="video oqim" />
                       </div>
                     </div>
 
@@ -112,7 +112,7 @@ function ProfilePage({ mainURl }) {
               </div>
 
               <div className="camera-main-right">
-                <div className="big_wrapper">
+                <div className="big_wrapper profile_right_user_card">
                   <div className="wrapper">
                     <div className="label-container__top">
                       <label htmlFor="" className="label-inner">
@@ -126,16 +126,16 @@ function ProfilePage({ mainURl }) {
                           <div className="person-datas">
                             <h2>G'ulomjonov Javohir</h2>
                             <p>
-                              <b>Xodim ID</b> : 010203
+                              <b>ID:</b> 010203
                             </p>
                             <p>
-                              <b>Unvon</b> : Kapitan
+                              <b>Unvon:</b> Kapitan
                             </p>
                             <p>
-                              <b>Lavozim</b> : Patrul boshlig'i
+                              <b>Lavozim:</b> Patrul boshlig'i
                             </p>
                             <p>
-                              <b>Kayfiyat</b> : 78% neytral
+                              <b>Kayfiyat:</b> 78% neytral
                             </p>
                           </div>
                         </div>

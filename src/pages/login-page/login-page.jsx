@@ -39,7 +39,11 @@ function LoginPage({ mainURl }) {
           }
         })
         .catch((error) => {
-          console.error("Ошибка", error);
+          setHidedSnack(false);
+          setSnackBarText("Xatolik. Qaytadan urunib ko'ring");
+          setTimeout(() => {
+            setHidedSnack(true);
+          }, 3000);
         });
     } else {
       setHidedSnack(false);

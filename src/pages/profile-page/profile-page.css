@@ -248,3 +248,27 @@
 .cameras_menu::-webkit-scrollbar-thumb {
   background: rgba(44, 44, 44, 0.289);
 }
+
+.center_camera_wrapper,
+.camera-main-right,
+.center_camera_wrapper .cyber_block,
+.camera-main-right .cyber_block,
+.center_camera_wrapper .wrapper,
+.camera-main-right .wrapper {
+  min-height: 620px;
+}
+.profile_right_user_card h2,
+.profile_right_user_card p {
+  line-height: 120%;
+  margin-bottom: 20px;
+}
+.profile_right_user_card p {
+  display: flex;
+  flex-direction: column;
+}
+
+.person-detected img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}

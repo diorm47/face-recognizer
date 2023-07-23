@@ -1,7 +1,6 @@
 .users_page {
   width: 100%;
   height: auto;
-  padding: 0 20px;
 }
 
 .users_col {
@@ -9,12 +8,8 @@
   width: 450px;
 }
 .users_list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  width: 100%;
-  height: 85vh !important;
-  height: auto;
-  padding: 0 100px;
+  width: 1200px;
+  margin: 0 auto;
 }
 .users_page_sidebar .sidebar_wrapper {
   margin-top: 225px;
@@ -81,11 +76,6 @@
   left: 180px;
 }
 
-.add_ser_btn {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
 .add_user_from {
   position: absolute;
   width: 100%;
@@ -180,4 +170,28 @@ input[type="file"]::file-selector-button {
 .user_actions {
   right: 0;
   top: -16px;
+}
+
+.search_input,
+.search_input .cyber_block,
+.search_input .wrapper {
+  width: 600px;
+  height: 40px;
+}
+.users_page .add_ser_btn {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  width: 1200px;
+  margin: 0 auto;
+  margin-bottom: 100px;
+}
+
+.search_input input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #b3b5d2;
 }

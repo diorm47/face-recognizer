@@ -8,7 +8,7 @@ import CameraPage from "./pages/camera-page/camera-page";
 import StatisticPage from "./pages/statistic-page/statistic-page";
 import FaceDetection from "./pages/stream";
 function App() {
-  const mainURl = `http://192.168.110.235:23456/`;
+  const mainURl = `http://192.168.110.235:12345/`;
 
   return (
     <>

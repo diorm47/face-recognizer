@@ -66,8 +66,6 @@ function CameraPage({ mainURl }) {
     setUpdatingCamera(false);
   };
   const saveCamera = () => {
-    setFormVisible(false);
-
     let bodyContent = JSON.stringify({
       name: cameraID,
       address: cameraIP,
@@ -79,20 +77,39 @@ function CameraPage({ mainURl }) {
       headers: headersList,
       data: bodyContent,
     };
+    if (cameraID && cameraIP) {
+      axios
+        .request(reqOptions)
+        .then((response) => {
+          setHidedSnack(false);
+          setSnackBarText("Camera qo'shildi");
+          refreshCameraPage();
+          setTimeout(() => {
+            setHidedSnack(true);
+          }, 3000);
+          setFormVisible(false);
+        })
+        .catch((error) => {
+          setHidedSnack(false);
+          setSnackBarText("Xatolik. Qaytadan urunib ko'ring");
+          setTimeout(() => {
+            setHidedSnack(true);
+          }, 3000);
+        });
+    } else {
+      setHidedSnack(false);
+      if (!cameraID && !cameraIP) {
+        setSnackBarText("Iltimos ma'lumotlarni kiriting");
+      } else if (!cameraID) {
+        setSnackBarText("Iltimos ID raqamni kiriting");
+      } else if (!cameraIP) {
+        setSnackBarText("Iltimos IP manzilni kiriting");
+      }
 
-    axios
-      .request(reqOptions)
-      .then((response) => {
-        setHidedSnack(false);
-        setSnackBarText("Camera qo'shildi");
-        refreshCameraPage();
-        setTimeout(() => {
-          setHidedSnack(true);
-        }, 3000);
-      })
-      .catch((error) => {
-        console.error("Ошибка", error);
-      });
+      setTimeout(() => {
+        setHidedSnack(true);
+      }, 3000);
+    }
   };
   const deleteCamera = (name) => {
     let reqOptions = {
@@ -148,7 +165,6 @@ function CameraPage({ mainURl }) {
     setUpdatingCameraData(camera.name);
     setCameraIP(camera.address);
   };
-  console.log(activeCamera);
   return (
     <>
       <Snackbar hidedSnack={hidedSnack} snackBarText={snackBarText} />

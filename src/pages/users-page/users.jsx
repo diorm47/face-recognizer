@@ -7,6 +7,7 @@ import Sidebar from "../../components/sidebar/sidebar";
 function Users({ mainURl }) {
   const [isFormVisible, setFormVisible] = useState(false);
   const [employeesList, setEmployeesList] = useState(false);
+  const [serchingItem, setSerchingItem] = useState("");
   const [isSideBarVisible, setSidebarVisible] = useState(false);
   const [isUserUpdating, setUserUpdating] = useState(false);
   const [hidedSnack, setHidedSnack] = useState(true);
@@ -87,21 +88,54 @@ function Users({ mainURl }) {
       data: formData,
     };
 
-    axios
-      .request(reqOptions)
-      .then((response) => {
-        setHidedSnack(false);
-        setSnackBarText("Hodim qo'shildi");
-        refreshUsersPage();
-        setTimeout(() => {
-          setHidedSnack(true);
-        }, 3000);
-      })
-      .catch((error) => {
-        console.error("Ошибка", error);
-      });
-
-    setFormVisible(false);
+    if (
+      employerID &&
+      employerName &&
+      employerRank &&
+      employerPostion &&
+      employerAvatarForSend &&
+      employerLastName &&
+      employerMiddleName
+    ) {
+      axios
+        .request(reqOptions)
+        .then((response) => {
+          setHidedSnack(false);
+          setSnackBarText("Hodim qo'shildi");
+          refreshUsersPage();
+          setTimeout(() => {
+            setHidedSnack(true);
+          }, 3000);
+          setFormVisible(false);
+        })
+        .catch((error) => {
+          setHidedSnack(false);
+          setSnackBarText("Xatolik. Qaytadan urunib ko'ring");
+          setTimeout(() => {
+            setHidedSnack(true);
+          }, 3000);
+        });
+    } else {
+      setHidedSnack(false);
+      if (!employerID) {
+        setSnackBarText("Iltimos ID raqamini kiriting");
+      } else if (!employerRank) {
+        setSnackBarText("Iltimos unvonni kiriting");
+      } else if (!employerPostion) {
+        setSnackBarText("Iltimos lavozimni kiriting");
+      } else if (!employerName) {
+        setSnackBarText("Iltimos ismni kiriting");
+      } else if (!employerLastName) {
+        setSnackBarText("Iltimos familiyani kiriting");
+      } else if (!employerMiddleName) {
+        setSnackBarText("Iltimos ota ismini kiriting");
+      } else if (!employerAvatarForSend) {
+        setSnackBarText("Iltimos suratni kiriting");
+      }
+      setTimeout(() => {
+        setHidedSnack(true);
+      }, 3000);
+    }
   };
 
   const saveImage = (e) => {
@@ -135,7 +169,11 @@ function Users({ mainURl }) {
         }, 3000);
       })
       .catch((error) => {
-        console.error("Ошибка", error);
+        setHidedSnack(false);
+        setSnackBarText("Xatolik. Qaytadan urunib ko'ring");
+        setTimeout(() => {
+          setHidedSnack(true);
+        }, 3000);
       });
   };
   const updateUserClick = (employer) => {
@@ -151,27 +189,71 @@ function Users({ mainURl }) {
   };
   const updateEmployerData = () => {
     let reqOptions = {
-      url: `${mainURl}employees/${updatingUserID}/delete/`,
-      method: "DELETE",
+      url: `${mainURl}employees/${updatingUserID}/edit/`,
+      method: "PUT",
       headers: headersList,
     };
 
-    axios
-      .request(reqOptions)
-      .then(() => {
-        addEmployer();
-      })
-      .then(() => {
-        setHidedSnack(false);
-        setSnackBarText("Hodim ma'lumotlari yangilandi");
-        refreshUsersPage();
-        setTimeout(() => {
-          setHidedSnack(true);
-        }, 3000);
-      })
-      .catch((error) => {
-        console.error("Ошибка", error);
-      });
+    if (
+      employerID &&
+      employerName &&
+      employerRank &&
+      employerPostion &&
+      employerAvatarForSend &&
+      employerLastName &&
+      employerMiddleName
+    ) {
+      axios
+        .request(reqOptions)
+        .then(() => {
+          addEmployer();
+        })
+        .then(() => {
+          setHidedSnack(false);
+          setSnackBarText("Hodim ma'lumotlari yangilandi");
+          refreshUsersPage();
+          setTimeout(() => {
+            setHidedSnack(true);
+          }, 3000);
+        })
+        .catch((error) => {
+          setHidedSnack(false);
+          setSnackBarText("Xatolik. Qaytadan urunib ko'ring");
+          setTimeout(() => {
+            setHidedSnack(true);
+          }, 3000);
+        });
+    } else {
+      setHidedSnack(false);
+      if (!employerID) {
+        setSnackBarText("Iltimos ID raqamini kiriting");
+      } else if (!employerRank) {
+        setSnackBarText("Iltimos unvonni kiriting");
+      } else if (!employerPostion) {
+        setSnackBarText("Iltimos lavozimni kiriting");
+      } else if (!employerName) {
+        setSnackBarText("Iltimos ismni kiriting");
+      } else if (!employerLastName) {
+        setSnackBarText("Iltimos familiyani kiriting");
+      } else if (!employerMiddleName) {
+        setSnackBarText("Iltimos ota ismini kiriting");
+      } else if (!employerAvatarForSend) {
+        setSnackBarText("Iltimos suratni kiriting");
+      }
+      setTimeout(() => {
+        setHidedSnack(true);
+      }, 3000);
+    }
+  };
+
+  const search = (employeesList) => {
+    return employeesList
+      .flat()
+      .filter((employeesList) =>
+        employeesList.last_name
+          .toLowerCase()
+          .startsWith(serchingItem.toLowerCase())
+      );
   };
   return (
     <>
@@ -187,6 +269,32 @@ function Users({ mainURl }) {
       />
       <div className="users_page">
         <div className="add_ser_btn">
+          <div className="search_input">
+            <div className="big_wrapper">
+              <div className="wrapper">
+                <div className="label-container__top">
+                  <label htmlFor="" className="label-inner">
+                    Qidirish
+                  </label>
+                </div>
+                <div className="cyber_block">
+                  <div className="cyber_block_inner">
+                    <input
+                      type="text"
+                      onChange={(e) => setSerchingItem(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="label-container__bottom">
+                  <label htmlFor="" className="label-inner">
+                    {" "}
+                    - - -{" "}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             className="btn btn--primary login_btn"
             onClick={() => setFormVisible(true)}
@@ -199,7 +307,7 @@ function Users({ mainURl }) {
         <div className="users_list">
           <div className="users_col">
             {employeesList &&
-              employeesList.map((employer) => (
+              search(employeesList).map((employer) => (
                 <div
                   className="users_list_item"
                   key={employer.employee_id}
