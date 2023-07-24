@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
 import Sidebar from "../../components/sidebar/sidebar";
 import "./statistic-page.css";
+import { useNavigate } from "react-router-dom";
 
-function StatisticPage({mainURl}) {
+function StatisticPage({ mainURl }) {
   const [series, setSeries] = useState([44, 55, 13, 33]);
   const [isFormVisible, setFormVisible] = useState(false);
   const [isSideBarVisible, setSidebarVisible] = useState(false);
@@ -41,6 +42,15 @@ function StatisticPage({mainURl}) {
     setFormVisible(false);
     setSidebarVisible(false);
   };
+
+  const token = sessionStorage.getItem("token");
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate, token]);
 
   const options = {
     chart: {

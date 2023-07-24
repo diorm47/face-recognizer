@@ -5,6 +5,13 @@ import "./loading-page.css";
 function LoadinPage() {
   const [loadingIncrement, incrementLoadinf] = useState([0]);
   const navigate = useNavigate();
+  const token = sessionStorage.getItem("token");
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate, token]);
   const data = [
     {
       AboutDevTypeText:

@@ -7,8 +7,18 @@ import Users from "./pages/users-page/users";
 import CameraPage from "./pages/camera-page/camera-page";
 import StatisticPage from "./pages/statistic-page/statistic-page";
 import FaceDetection from "./pages/stream";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 function App() {
   const mainURl = `http://192.168.110.235:12345/`;
+  const token = sessionStorage.getItem("token");
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate, token]);
 
   return (
     <>

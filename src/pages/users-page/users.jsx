@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import "./users.css";
 import Snackbar from "../../components/snack-bar/snack-bar";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/sidebar/sidebar";
 
 function Users({ mainURl }) {
   const [isFormVisible, setFormVisible] = useState(false);
-  const [employeesList, setEmployeesList] = useState(false);
+  const [employeesList, setEmployeesList] = useState([]);
   const [serchingItem, setSerchingItem] = useState("");
   const [isSideBarVisible, setSidebarVisible] = useState(false);
   const [isUserUpdating, setUserUpdating] = useState(false);
@@ -26,6 +27,15 @@ function Users({ mainURl }) {
   const [employerMiddleName, setEmployerMiddleName] = useState("");
 
   const token = sessionStorage.getItem("token");
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+      
+    }
+    console.log("jhk");
+  }, [navigate, token])
 
   let headersList = {
     Accept: "*/*",
@@ -245,7 +255,6 @@ function Users({ mainURl }) {
       }, 3000);
     }
   };
-
   const search = (employeesList) => {
     return employeesList
       .flat()
@@ -255,6 +264,14 @@ function Users({ mainURl }) {
           .startsWith(serchingItem.toLowerCase())
       );
   };
+  const moveElementToEnd = () => {
+    const newArray = employeesList.filter(
+      (item) => item.employee_id !== employeesList[0].employee_id
+    );
+    newArray.push(employeesList[0]);
+    setEmployeesList(newArray);
+  };
+
   return (
     <>
       <Snackbar hidedSnack={hidedSnack} snackBarText={snackBarText} />
@@ -307,78 +324,81 @@ function Users({ mainURl }) {
         <div className="users_list">
           <div className="users_col">
             {employeesList &&
-              search(employeesList).map((employer) => (
-                <div
-                  className="users_list_item"
-                  key={employer.employee_id}
-                  onMouseEnter={() => setActiveActions(employer.employee_id)}
-                  onMouseLeave={() => setActiveActions("")}
-                >
+              search(employeesList)
+                .slice(0, 10)
+                .map((employer) => (
                   <div
-                    className={
-                      activeActions === employer.employee_id
-                        ? "camera_item_actions user_actions"
-                        : "camera_item_actions user_actions camera_item_actions_hided"
-                    }
+                    className="users_list_item"
+                    key={employer.employee_id}
+                    onMouseEnter={() => setActiveActions(employer.employee_id)}
+                    onMouseLeave={() => setActiveActions("")}
+                    onWheel={() => moveElementToEnd()}
                   >
-                    <button onClick={() => updateUserClick(employer)}>
-                      tahrirlash
-                    </button>
-                    <button onClick={() => deleteUser(employer.employee_id)}>
-                      o'chirish
-                    </button>
-                  </div>
-                  <div className="big_wrapper">
-                    <div className="wrapper">
-                      <div className="label-container__top">
-                        <label htmlFor="" className="label-inner">
-                          {employer.last_name} {employer.first_name[0]}.
-                        </label>
-                      </div>
-                      <div className="cyber_block">
-                        <div className="cyber_block_inner employer_card">
-                          <div className="employer_left_img">
-                            <img src={employer.main_image} alt="" />
-                          </div>
-                          <div className="right_employer_desc">
-                            <div>
-                              <p>ID:</p>
-                              <p>{employer.employee_id}</p>
+                    <div
+                      className={
+                        activeActions === employer.employee_id
+                          ? "camera_item_actions user_actions"
+                          : "camera_item_actions user_actions camera_item_actions_hided"
+                      }
+                    >
+                      <button onClick={() => updateUserClick(employer)}>
+                        tahrirlash
+                      </button>
+                      <button onClick={() => deleteUser(employer.employee_id)}>
+                        o'chirish
+                      </button>
+                    </div>
+                    <div className="big_wrapper">
+                      <div className="wrapper">
+                        <div className="label-container__top">
+                          <label htmlFor="" className="label-inner">
+                            {employer.last_name} {employer.first_name[0]}.
+                          </label>
+                        </div>
+                        <div className="cyber_block">
+                          <div className="cyber_block_inner employer_card">
+                            <div className="employer_left_img">
+                              <img src={employer.main_image} alt="" />
                             </div>
-                            <div>
-                              <p>Unvon:</p>
-                              <p>{employer.rank}</p>
-                            </div>
-                            <div>
-                              <p>Lavozim:</p>
-                              <p>{employer.position}</p>
-                            </div>
-                            <div>
-                              <p>Ism:</p>
-                              <p>{employer.first_name}</p>
-                            </div>
-                            <div>
-                              <p>Familiya:</p>
-                              <p>{employer.last_name}</p>
-                            </div>
-                            <div>
-                              <p>Otasini ismi:</p>
-                              <p>{employer.middle_name}</p>
+                            <div className="right_employer_desc">
+                              <div>
+                                <p>ID:</p>
+                                <p>{employer.employee_id}</p>
+                              </div>
+                              <div>
+                                <p>Unvon:</p>
+                                <p>{employer.rank}</p>
+                              </div>
+                              <div>
+                                <p>Lavozim:</p>
+                                <p>{employer.position}</p>
+                              </div>
+                              <div>
+                                <p>Ism:</p>
+                                <p>{employer.first_name}</p>
+                              </div>
+                              <div>
+                                <p>Familiya:</p>
+                                <p>{employer.last_name}</p>
+                              </div>
+                              <div>
+                                <p>Otasini ismi:</p>
+                                <p>{employer.middle_name}</p>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="label-container__bottom">
-                        <label htmlFor="" className="label-inner">
-                          {" "}
-                          - - -{" "}
-                        </label>
+                        <div className="label-container__bottom">
+                          <label htmlFor="" className="label-inner">
+                            {" "}
+                            - - -{" "}
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
           </div>
         </div>
       </div>

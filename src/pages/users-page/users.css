@@ -6,6 +6,8 @@
 .users_col {
   position: relative;
   width: 450px;
+ 
+  margin-left: 150px;
 }
 .users_list {
   width: 1200px;
@@ -16,7 +18,8 @@
 }
 
 .users_list_item {
-  width: 400px;
+  width: 800px;
+  height: 300px;
   position: absolute;
   cursor: pointer;
   transition: all 0.4s ease;
@@ -25,8 +28,13 @@
   margin-top: -50px;
   transition: all 0.4s ease;
 }
+.users_list_item
+.cyber_block {
+  height: 300px;
+}
 .users_list_item .big_wrapper {
   background: #0f1020;
+  height: 300px;
   border-bottom-left-radius: 21px;
   border-top-right-radius: 21px;
 }

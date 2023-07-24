@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/sidebar/sidebar";
 import "../login-page/login-page.css";
 import "./profile-page.css";
+import { useNavigate } from "react-router-dom";
 
 function ProfilePage({ mainURl }) {
   const [isSideBarVisible, setSidebarVisible] = useState(false);
@@ -31,7 +32,14 @@ function ProfilePage({ mainURl }) {
         console.error("Ошибка", error);
       });
   }, []);
+  const token = sessionStorage.getItem("token");
 
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate, token]);
   return (
     <>
       {isSideBarVisible ? (

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/sidebar/sidebar";
 import Snackbar from "../../components/snack-bar/snack-bar";
+import { useNavigate } from "react-router-dom";
 import "./camera-page.css";
 
 function CameraPage({ mainURl }) {
@@ -18,6 +19,13 @@ function CameraPage({ mainURl }) {
   const [hidedSnack, setHidedSnack] = useState(true);
   const [snackBarText, setSnackBarText] = useState("");
   const token = sessionStorage.getItem("token");
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate, token]);
 
   let headersList = {
     Accept: "*/*",
@@ -231,7 +239,7 @@ function CameraPage({ mainURl }) {
                 ))}
             </div>
             <div className="add_camera_btn">
-              <div className="add_ser_btn">
+              <div className="add_ser_btn df_aie_jce">
                 <div
                   className="btn btn--primary login_btn"
                   onClick={() => setFormVisible(true)}
@@ -329,7 +337,7 @@ function CameraPage({ mainURl }) {
               </div>
             </div>
             <div className="add_camera_btn">
-              <div className="add_ser_btn">
+              <div className="add_ser_btn df_aie_jce">
                 <div
                   className="btn btn--primary login_btn"
                   onClick={saveCamera}
