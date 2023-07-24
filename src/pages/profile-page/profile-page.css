@@ -195,6 +195,9 @@
   z-index: 200;
 }
 
+.fz_14px {
+  font-size: 14px;
+}
 .label-inner {
   font-family: Goldman;
   text-transform: uppercase;

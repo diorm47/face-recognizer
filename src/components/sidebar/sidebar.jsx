@@ -33,7 +33,7 @@ function Sidebar({ isSideBarVisible, setSidebarVisible }) {
             </NavLink>
             <NavLink to="/users">
               <div className="sidebar_content_link">
-                <p>Odamlar</p>
+                <p>Hodimlar</p>
               </div>
             </NavLink>
             <NavLink to="/camera">

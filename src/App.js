@@ -14,11 +14,11 @@ function App() {
   const mainURl = `http://192.168.110.235:12345/`;
   const token = sessionStorage.getItem("token");
   const navigate = useNavigate();
-  useEffect(() => {
-    if (!token) {
-      navigate("/login");
-    }
-  }, [navigate, token]);
+  // useEffect(() => {
+  //   if (!token) {
+  //     navigate("/login");
+  //   }
+  // }, [navigate, token]);
 
   return (
     <>
@@ -29,7 +29,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage mainURl={mainURl} />} />
         <Route path="/users" element={<Users mainURl={mainURl} />} />
         <Route path="/camera" element={<CameraPage mainURl={mainURl} />} />
-        <Route path="/cass" element={<FaceDetection mainURl={mainURl} />} />
+        <Route path="/face" element={<FaceDetection mainURl={mainURl} />} />
         <Route
           path="/statistic"
           element={<StatisticPage mainURl={mainURl} />}

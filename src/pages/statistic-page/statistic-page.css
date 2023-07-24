@@ -27,3 +27,25 @@
   color: #fff !important;
   padding-left: 20px !important;
 }
+
+.apexcharts-legend {
+  display: none !important;
+}
+#chart {
+  display: flex;
+  align-items: center;
+}
+
+.item_self {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.item_self div {
+  cursor: pointer;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  margin-right: 10px;
+}

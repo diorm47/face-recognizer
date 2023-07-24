@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/sidebar/sidebar";
 import "../login-page/login-page.css";
 import "./profile-page.css";
-import { useNavigate } from "react-router-dom";
 
 function ProfilePage({ mainURl }) {
   const [isSideBarVisible, setSidebarVisible] = useState(false);
@@ -23,10 +23,10 @@ function ProfilePage({ mainURl }) {
     };
 
     axios
-
       .request(reqOptions)
       .then((response) => {
         setCameras(response.data);
+        setCamera(response.data[0].address);
       })
       .catch((error) => {
         console.error("Ошибка", error);
@@ -40,6 +40,7 @@ function ProfilePage({ mainURl }) {
       navigate("/login");
     }
   }, [navigate, token]);
+
   return (
     <>
       {isSideBarVisible ? (
@@ -78,7 +79,7 @@ function ProfilePage({ mainURl }) {
                               </div>
                               <div className="cyber_block">
                                 <div className="cyber_block_inner">
-                                  {camera.address}
+                                  <p className="fz_14px"> {camera.address}</p>
                                 </div>
                               </div>
 

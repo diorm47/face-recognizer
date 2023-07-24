@@ -3,41 +3,14 @@ import ReactApexChart from "react-apexcharts";
 import Sidebar from "../../components/sidebar/sidebar";
 import "./statistic-page.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function StatisticPage({ mainURl }) {
-  const [series, setSeries] = useState([44, 55, 13, 33]);
+  const [series, setSeries] = useState([25, 55, 13, 33, 22, 10, 50]);
+  const [usersSeries, setUsersSeries] = useState([]);
   const [isFormVisible, setFormVisible] = useState(false);
   const [isSideBarVisible, setSidebarVisible] = useState(false);
-  const [employers, setEmployers] = useState([
-    {
-      camera_id: "CAM001",
-      ip_adress: "https://192.168.255.88",
-    },
-    {
-      camera_id: "CAM002",
-      ip_adress: "https://192.168.255.88",
-    },
-    {
-      camera_id: "CAM003",
-      ip_adress: "https://192.168.255.88",
-    },
-    {
-      camera_id: "CAM004",
-      ip_adress: "https://192.168.255.88",
-    },
-    {
-      camera_id: "CAM005",
-      ip_adress: "https://192.168.255.88",
-    },
-    {
-      camera_id: "CAM006",
-      ip_adress: "https://192.168.255.88",
-    },
-    {
-      camera_id: "CAM007",
-      ip_adress: "https://192.168.255.88",
-    },
-  ]);
+
   const handleModalOverlay = () => {
     setFormVisible(false);
     setSidebarVisible(false);
@@ -52,6 +25,29 @@ function StatisticPage({ mainURl }) {
     }
   }, [navigate, token]);
 
+  let headersList = {
+    Accept: "*/*",
+    "Content-Type": "application/json",
+    Authorization: `Token ${token}`,
+  };
+
+  useEffect(() => {
+    let reqOptions = {
+      url: `${mainURl}stats/list/`,
+      method: "GET",
+      headers: headersList,
+    };
+
+    axios
+      .request(reqOptions)
+      .then((response) => {
+        setUsersSeries(response.data.results);
+      })
+      .catch((error) => {
+        console.error("Ошибка", error);
+      });
+  }, []);
+
   const options = {
     chart: {
       width: 500,
@@ -61,13 +57,14 @@ function StatisticPage({ mainURl }) {
       enabled: false,
     },
 
-    legend: {
-      position: "left",
-      offsetY: 100,
-      height: 230,
-      fontSize: 19,
-      color: "white",
-    },
+    // legend: {
+
+    //   position: "left",
+    //   offsetY: 100,
+    //   height: 230,
+    //   fontSize: 19,
+    //   color: "white",
+    // },
   };
 
   const randomize = () => {
@@ -75,7 +72,7 @@ function StatisticPage({ mainURl }) {
   };
 
   const reset = () => {
-    setSeries([44, 55, 13, 33]);
+    setSeries([44, 55, 13, 33, 44, 55, 13]);
   };
 
   return (
@@ -93,19 +90,19 @@ function StatisticPage({ mainURl }) {
         <div className="stats_wrapper">
           <div className="left_stats_list">
             <div className="left_stats_list_items">
-              {employers &&
-                employers.map((employer) => (
+              {usersSeries &&
+                usersSeries.map((employer) => (
                   <div key={employer.camera_id} className="stats_list_item">
                     <div className="big_wrapper">
                       <div className="wrapper">
                         <div className="label-container__top">
                           <label htmlFor="" className="label-inner">
-                            ID: {employer.camera_id}
+                            {employer.user_id}
                           </label>
                         </div>
                         <div className="cyber_block">
                           <div className="cyber_block_inner">
-                            {employer.ip_adress}
+                            {employer.camera_url}
                           </div>
                         </div>
 
@@ -128,6 +125,36 @@ function StatisticPage({ mainURl }) {
                 <button onClick={reset}>RESET</button>
               </div>
               <div id="chart">
+                <div className="chart_legends">
+                  <div className="item_self">
+                    <div></div>
+                    <p>Jaxldorlik</p>
+                  </div>
+                  <div className="item_self">
+                    <div></div>
+                    <p>Bexuzur</p>
+                  </div>
+                  <div className="item_self">
+                    <div></div>
+                    <p>Xayajon</p>
+                  </div>
+                  <div className="item_self">
+                    <div></div>
+                    <p>Hursandchilik</p>
+                  </div>
+                  <div className="item_self">
+                    <div></div>
+                    <p>G'amgin</p>
+                  </div>
+                  <div className="item_self">
+                    <div></div>
+                    <p>Hayron</p>
+                  </div>
+                  <div className="item_self">
+                    <div></div>
+                    <p>Neytral</p>
+                  </div>
+                </div>
                 <ReactApexChart
                   options={options}
                   series={series}

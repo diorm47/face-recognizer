@@ -23,6 +23,7 @@ function Users({ mainURl }) {
   const [employerName, setEmployerName] = useState("");
   const [employerAvatar, setEmployerAvatar] = useState(null);
   const [employerAvatarForSend, setEmployerAvatarForSend] = useState(null);
+  const [employerEmployerZip, setEmployerEmployerZip] = useState(null);
   const [employerLastName, setEmployerLastName] = useState("");
   const [employerMiddleName, setEmployerMiddleName] = useState("");
 
@@ -32,10 +33,8 @@ function Users({ mainURl }) {
   useEffect(() => {
     if (!token) {
       navigate("/login");
-      
     }
-    console.log("jhk");
-  }, [navigate, token])
+  }, [navigate, token]);
 
   let headersList = {
     Accept: "*/*",
@@ -90,6 +89,7 @@ function Users({ mainURl }) {
     formData.append("main_image", employerAvatarForSend || employerAvatar);
     formData.append("last_name", employerLastName);
     formData.append("middle_name", employerMiddleName);
+    // formData.append("images", employerEmployerZip);
 
     let reqOptions = {
       url: `${mainURl}employees/create/`,
@@ -161,6 +161,9 @@ function Users({ mainURl }) {
       reader.readAsDataURL(file);
     }
   };
+  const saveZip = (e) => {
+    setEmployerEmployerZip(e.target.files[0]);
+  };
   const deleteUser = (id) => {
     let reqOptions = {
       url: `${mainURl}employees/${id}/delete/`,
@@ -193,14 +196,20 @@ function Users({ mainURl }) {
     setEmployerPostion(employer.position);
     setEmployerName(employer.first_name);
     setEmployerAvatar(employer.main_image);
+    setEmployerAvatarForSend(employer.main_image);
     setEmployerLastName(employer.last_name);
     setEmployerMiddleName(employer.middle_name);
     setUserUpdating(true);
   };
   const updateEmployerData = () => {
-    let reqOptions = {
-      url: `${mainURl}employees/${updatingUserID}/edit/`,
-      method: "PUT",
+    let reqOptions_2 = {
+      url: `${mainURl}employees/create/`,
+      method: "POST",
+      headers: headersList,
+    };
+    let reqOptions_1 = {
+      url: `${mainURl}employees/${updatingUserID}/delete/`,
+      method: "DELETE",
       headers: headersList,
     };
 
@@ -214,7 +223,7 @@ function Users({ mainURl }) {
       employerMiddleName
     ) {
       axios
-        .request(reqOptions)
+        .request(reqOptions_1)
         .then(() => {
           addEmployer();
         })
@@ -587,9 +596,18 @@ function Users({ mainURl }) {
               </div>
               <div className="right_employer_input">
                 <label htmlFor="employer_avatar">
-                  <div className="add_ser_btn save_employer">
+                  <div className="add_ser_btn save_employer mb_20px">
                     <div className="btn btn--primary login_btn">
                       <div className="btn__container">Yuklash</div>
+                      <div className="btn__bottom"></div>
+                      <div className="btn__noise"></div>
+                    </div>
+                  </div>
+                </label>
+                <label htmlFor="employer_zip">
+                  <div className="add_ser_btn save_employer">
+                    <div className="btn btn--primary login_btn">
+                      <div className="btn__container">ZIP</div>
                       <div className="btn__bottom"></div>
                       <div className="btn__noise"></div>
                     </div>
@@ -602,6 +620,14 @@ function Users({ mainURl }) {
                   className="editor-field__input"
                   placeholder="Surat tanlang"
                   onChange={saveImage}
+                />
+                <input
+                  type="file"
+         
+                  id="employer_zip"
+                  className="editor-field__input"
+                  placeholder="Surat tanlang"
+                  onChange={saveZip}
                 />
                 <div className="add_ser_btn save_employer">
                   <div
@@ -811,6 +837,22 @@ function Users({ mainURl }) {
                     </div>
                   </div>
                 </label>
+                <label htmlFor="employer_zip">
+                  <div className="add_ser_btn save_employer">
+                    <div className="btn btn--primary login_btn">
+                      <div className="btn__container">ZIP</div>
+                      <div className="btn__bottom"></div>
+                      <div className="btn__noise"></div>
+                    </div>
+                  </div>
+                </label>
+                <input
+                  type="file"
+                  id="employer_zip"
+                  className="editor-field__input"
+                  placeholder="Surat tanlang"
+                  onChange={saveZip}
+                />
                 <input
                   type="file"
                   accept="image/*"
