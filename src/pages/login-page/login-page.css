@@ -55,6 +55,7 @@ body {
   align-items: flex-end;
   text-align: center;
 }
+.login
 .editor-field {
   width: 100%;
   height: 64px;
@@ -147,6 +148,7 @@ body {
   clip-path: polygon(0 0, calc(100% - 2px) 0%, 100% 100%, 0% 100%);
   bottom: 2px;
 }
+.login
 .editor-field__label {
   position: relative;
   display: block;

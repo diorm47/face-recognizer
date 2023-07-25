@@ -9,13 +9,14 @@ function ProfilePage({ mainURl }) {
   const [isSideBarVisible, setSidebarVisible] = useState(false);
   const [camera, setCamera] = useState("");
   const [cameras, setCameras] = useState([]);
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    let headersList = {
-      Accept: "*/*",
-      Authorization: `Token ${token}`,
-    };
+  const [detectedUserData, setDetectedUserData] = useState([]);
+  const token = sessionStorage.getItem("token");
+  let headersList = {
+    Accept: "*/*",
+    Authorization: `Token ${token}`,
+  };
 
+  useEffect(() => {
     let reqOptions = {
       url: `${mainURl}ip/list/`,
       method: "GET",
@@ -32,7 +33,6 @@ function ProfilePage({ mainURl }) {
         console.error("Ошибка", error);
       });
   }, []);
-  const token = sessionStorage.getItem("token");
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -40,6 +40,19 @@ function ProfilePage({ mainURl }) {
       navigate("/login");
     }
   }, [navigate, token]);
+
+  // useEffect(() => {
+  //   const req = async () => {
+  //     let reqOptions = {
+  //       url: `${mainURl}stats/stream/`,
+  //       method: "GET",
+  //       headers: headersList,
+  //     };
+  //     let response = await axios.request(reqOptions);
+  //     setDetectedUserData(response.data);
+  //   };
+  //   req();
+  // }, []);
 
   return (
     <>
@@ -121,44 +134,50 @@ function ProfilePage({ mainURl }) {
               </div>
 
               <div className="camera-main-right">
-                <div className="big_wrapper profile_right_user_card">
-                  <div className="wrapper">
-                    <div className="label-container__top">
-                      <label htmlFor="" className="label-inner">
-                        G'ulomjonov J.
-                      </label>
-                    </div>
-                    <div className="cyber_block">
-                      <div className="cyber_block_inner">
-                        <div className="person-detected">
-                          <img src="https://i.pravatar.cc/300?img=3" alt="" />
-                          <div className="person-datas">
-                            <h2>G'ulomjonov Javohir</h2>
-                            <p>
-                              <b>ID:</b> 010203
-                            </p>
-                            <p>
-                              <b>Unvon:</b> Kapitan
-                            </p>
-                            <p>
-                              <b>Lavozim:</b> Patrul boshlig'i
-                            </p>
-                            <p>
-                              <b>Kayfiyat:</b> 78% neytral
-                            </p>
+                {detectedUserData &&
+                  detectedUserData.map((data) => (
+                    <div className="big_wrapper profile_right_user_card">
+                      <div className="wrapper">
+                        <div className="label-container__top">
+                          <label htmlFor="" className="label-inner">
+                            G'ulomjonov J.
+                          </label>
+                        </div>
+                        <div className="cyber_block">
+                          <div className="cyber_block_inner">
+                            <div className="person-detected">
+                              <img
+                                src="https://i.pravatar.cc/300?img=3"
+                                alt=""
+                              />
+                              <div className="person-datas">
+                                <h2>G'ulomjonov Javohir</h2>
+                                <p>
+                                  <b>ID:</b> 010203
+                                </p>
+                                <p>
+                                  <b>Unvon:</b> Kapitan
+                                </p>
+                                <p>
+                                  <b>Lavozim:</b> Patrul boshlig'i
+                                </p>
+                                <p>
+                                  <b>Kayfiyat:</b> 78% neytral
+                                </p>
+                              </div>
+                            </div>
                           </div>
+                        </div>
+
+                        <div className="label-container__bottom">
+                          <label htmlFor="" className="label-inner">
+                            {" "}
+                            - - -{" "}
+                          </label>
                         </div>
                       </div>
                     </div>
-
-                    <div className="label-container__bottom">
-                      <label htmlFor="" className="label-inner">
-                        {" "}
-                        - - -{" "}
-                      </label>
-                    </div>
-                  </div>
-                </div>
+                  ))}
               </div>
             </div>
           </div>

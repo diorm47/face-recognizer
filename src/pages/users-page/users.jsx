@@ -15,6 +15,7 @@ function Users({ mainURl }) {
   const [snackBarText, setSnackBarText] = useState("");
   const [activeActions, setActiveActions] = useState();
   const [updatingUserID, setUpdatingUserID] = useState("");
+  const [marginNone, setMarginNone] = useState();
 
   // Employer data
   const [employerID, setEmployerID] = useState("");
@@ -68,7 +69,6 @@ function Users({ mainURl }) {
     axios
       .request(reqOptions)
       .then((response) => {
-        console.log(response);
         setEmployeesList(response.data);
       })
       .catch((error) => {
@@ -111,12 +111,16 @@ function Users({ mainURl }) {
         .request(reqOptions)
         .then((response) => {
           setHidedSnack(false);
-          setSnackBarText("Hodim qo'shildi");
+          if (!updatingUserID) {
+            setSnackBarText("Hodim qo'shildi");
+          } else {
+            setSnackBarText("Hodim ma'lumotlari yangilandi");
+          }
           refreshUsersPage();
           setTimeout(() => {
             setHidedSnack(true);
           }, 3000);
-          setFormVisible(false);
+          handleModalOverlay();
         })
         .catch((error) => {
           setHidedSnack(false);
@@ -147,7 +151,6 @@ function Users({ mainURl }) {
       }, 3000);
     }
   };
-
   const saveImage = (e) => {
     const file = e.target.files[0];
     setEmployerAvatarForSend(e.target.files[0]);
@@ -174,12 +177,14 @@ function Users({ mainURl }) {
     axios
       .request(reqOptions)
       .then((response) => {
-        setHidedSnack(false);
-        setSnackBarText("Hodim o'chirildi");
-        refreshUsersPage();
-        setTimeout(() => {
-          setHidedSnack(true);
-        }, 3000);
+        if (!updatingUserID) {
+          setHidedSnack(false);
+          setSnackBarText("Hodim o'chirildi");
+          refreshUsersPage();
+          setTimeout(() => {
+            setHidedSnack(true);
+          }, 3000);
+        }
       })
       .catch((error) => {
         setHidedSnack(false);
@@ -264,6 +269,7 @@ function Users({ mainURl }) {
       }, 3000);
     }
   };
+
   const search = (employeesList) => {
     return employeesList
       .flat()
@@ -335,9 +341,13 @@ function Users({ mainURl }) {
             {employeesList &&
               search(employeesList)
                 .slice(0, 10)
-                .map((employer) => (
+                .map((employer, index, self) => (
                   <div
-                    className="users_list_item"
+                    className={
+                      marginNone < index && marginNone < 9
+                        ? "users_list_item mt_none"
+                        : "users_list_item"
+                    }
                     key={employer.employee_id}
                     onMouseEnter={() => setActiveActions(employer.employee_id)}
                     onMouseLeave={() => setActiveActions("")}
@@ -357,7 +367,11 @@ function Users({ mainURl }) {
                         o'chirish
                       </button>
                     </div>
-                    <div className="big_wrapper">
+                    <div
+                      className="big_wrapper"
+                      onMouseEnter={() => setMarginNone(index)}
+                      onMouseLeave={() => setMarginNone()}
+                    >
                       <div className="wrapper">
                         <div className="label-container__top">
                           <label htmlFor="" className="label-inner">
@@ -623,7 +637,6 @@ function Users({ mainURl }) {
                 />
                 <input
                   type="file"
-         
                   id="employer_zip"
                   className="editor-field__input"
                   placeholder="Surat tanlang"

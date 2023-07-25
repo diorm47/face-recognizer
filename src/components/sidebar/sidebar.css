@@ -32,7 +32,7 @@
   transition: all 0.4s ease;
 }
 .hided_sidebar {
-  left: -566px;
+  left: -562px;
   transition: all 0.4s ease;
 }
 .chevron_btn_hided {
@@ -92,4 +92,44 @@
 .sidebar_wrapper .editor-field__container {
   border: 4px solid #4ac5ff;
   background: #0f1020;
+}
+
+.sidebar_content .editor-field__label {
+  position: relative;
+  display: block;
+  height: 16px;
+  width: auto;
+  background: #4ac5ff;
+  left: 0px;
+  color: #0f1020;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1.25px;
+  font-weight: 600;
+  padding: 0 24px 0 16px;
+  display: flex;
+  align-items: center;
+  font-family: Goldman;
+  -webkit-clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 100%, 0% 100%);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 100%, 0% 100%);
+  bottom: 0;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sidebar_content
+.editor-field__label-container:after {
+  bottom: 2px;
+}
+.sidebar_content
+.editor-field__label-container {
+  position: absolute;
+  top: 0px;
+  height: 50px !important;
+  width: 120px;
+  height: 50px;
+  bottom: 0;
+  
 }

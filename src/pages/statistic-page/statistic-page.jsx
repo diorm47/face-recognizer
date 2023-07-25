@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function StatisticPage({ mainURl }) {
-  const [series, setSeries] = useState([25, 55, 13, 33, 22, 10, 50]);
+  const [series, setSeries] = useState([12, 5, 10, 3, 40, 20, 10]);
   const [usersSeries, setUsersSeries] = useState([]);
   const [isFormVisible, setFormVisible] = useState(false);
   const [isSideBarVisible, setSidebarVisible] = useState(false);
@@ -56,25 +56,20 @@ function StatisticPage({ mainURl }) {
     dataLabels: {
       enabled: false,
     },
-
-    // legend: {
-
-    //   position: "left",
-    //   offsetY: 100,
-    //   height: 230,
-    //   fontSize: 19,
-    //   color: "white",
-    // },
   };
 
-  const randomize = () => {
-    setSeries(series.map(() => Math.floor(Math.random() * (100 - 1 + 1)) + 1));
+  const allStat = () => {
+    setSeries([12, 5, 10, 3, 40, 20, 10]);
   };
-
-  const reset = () => {
-    setSeries([44, 55, 13, 33, 44, 55, 13]);
+  const weekStat = () => {
+    setSeries([16, 1, 16, 9, 20, 40, 18]);
   };
-
+  const monthStat = () => {
+    setSeries([7, 12, 10, 10, 35, 26, 8]);
+  };
+  const yearStat = () => {
+    setSeries([12, 5, 10, 3, 40, 20, 10]);
+  };
   return (
     <>
       {isFormVisible || isSideBarVisible ? (
@@ -121,38 +116,54 @@ function StatisticPage({ mainURl }) {
           <div className="right_chart">
             <div className="chart-wrap">
               <div className="right_chart_actions">
-                <button onClick={randomize}>RANDOMIZE</button>&nbsp;
-                <button onClick={reset}>RESET</button>
+                <button onClick={allStat}>Umumiy</button>
+                <button onClick={weekStat}>Hafta</button>
+                <button onClick={monthStat}>Oy</button>
+                <button onClick={yearStat}>Yil</button>
               </div>
               <div id="chart">
                 <div className="chart_legends">
                   <div className="item_self">
                     <div></div>
-                    <p>Jaxldorlik</p>
+                    <p>
+                      Jaxldorlik - <span>{series[1]}%</span>
+                    </p>
                   </div>
                   <div className="item_self">
                     <div></div>
-                    <p>Bexuzur</p>
+                    <p>
+                      Bexuzur - <span>{series[2]}%</span>
+                    </p>
                   </div>
                   <div className="item_self">
                     <div></div>
-                    <p>Xayajon</p>
+                    <p>
+                      Xayajon - <span>{series[3]}%</span>
+                    </p>
                   </div>
                   <div className="item_self">
                     <div></div>
-                    <p>Hursandchilik</p>
+                    <p>
+                      Hursandlik - <span>{series[4]}%</span>
+                    </p>
                   </div>
                   <div className="item_self">
                     <div></div>
-                    <p>G'amgin</p>
+                    <p>
+                      G'amgin - <span>{series[5]}%</span>
+                    </p>
                   </div>
                   <div className="item_self">
                     <div></div>
-                    <p>Hayron</p>
+                    <p>
+                      Hayron - <span>{series[6]}%</span>
+                    </p>
                   </div>
                   <div className="item_self">
                     <div></div>
-                    <p>Neytral</p>
+                    <p>
+                      Neytral - <span>{series[0]}%</span>
+                    </p>
                   </div>
                 </div>
                 <ReactApexChart

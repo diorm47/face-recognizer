@@ -49,3 +49,49 @@
   background: #fff;
   margin-right: 10px;
 }
+.apexcharts-slices .apexcharts-series:nth-child(2) * {
+  fill: red !important;
+}
+.apexcharts-slices .apexcharts-series:nth-child(5) * {
+  fill: green !important;
+}
+.apexcharts-slices .apexcharts-series:nth-child(6) * {
+  fill: rgb(119, 93, 208) !important;
+}
+.chart_legends .item_self:first-child div {
+  background: red;
+}
+.chart_legends .item_self:nth-child(2) div {
+  background: rgb(254, 176, 25);
+}
+.chart_legends .item_self:nth-child(3) div {
+  background: rgb(255, 69, 96);
+}
+
+.chart_legends .item_self:nth-child(4) div {
+  background: green;
+}
+.chart_legends .item_self:nth-child(5) div {
+  background: rgb(119, 93, 208) ;
+}
+.chart_legends .item_self:nth-child(7) div {
+  background: rgb(0, 143, 251);
+}
+.chart_legends .item_self:nth-child(6) div {
+  background: rgb(0, 227, 150);
+}
+
+.right_chart_actions {
+  margin-left: 100px;
+}
+
+.right_chart_actions button {
+  margin: 0 10px;
+  cursor: pointer;
+  padding: 3px 8px;
+  background: rgb(0, 143, 251);
+  border: none;
+  outline: none;
+  color: #fff;
+  border-radius: 5px;
+}
