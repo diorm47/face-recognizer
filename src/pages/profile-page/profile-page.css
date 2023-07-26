@@ -128,7 +128,7 @@
 }
 
 .camera-main-right {
-  width: 16%;
+  width: 21%;
 }
 
 .camera-main-left {
@@ -145,18 +145,45 @@
   top: 0;
 }
 
-.camera-main-right .big_wrapper:hover {
-  position: absolute;
+.camera-main-right .big_wrapper img {
   cursor: pointer;
-  z-index: 999;
+}
+.z_index_top {
+  z-index: 111 !important;
 }
 
 .camera-main-right .big_wrapper:nth-child(2) {
   position: absolute;
   top: 40px;
+  left: 20px;
   z-index: 99;
 }
+.camera-main-right .big_wrapper:nth-child(3) {
+  position: absolute;
+  top: 80px;
+  left: 40px;
 
+  z-index: 99;
+}
+.camera-main-right .big_wrapper:nth-child(4) {
+  position: absolute;
+  top: 120px;
+  left: 60px;
+
+  z-index: 99;
+}
+.camera-main-right .big_wrapper:nth-child(5) {
+  position: absolute;
+  top: 160px;
+  z-index: 99;
+  left: 80px;
+}
+.camera-main-right .big_wrapper:nth-child(6) {
+  position: absolute;
+  top: 200px;
+  z-index: 99;
+  left: 100px;
+}
 /* person datas */
 .person-detected {
   display: flex;
@@ -165,7 +192,7 @@
 
 .person-detected .person-datas {
   line-height: 50px;
-  padding: 10px;
+  padding: 10px 0 0;
 }
 
 /* loading page*/
@@ -225,7 +252,7 @@
 }
 
 .center_camera_wrapper {
-  width: 53%;
+  width: 48%;
   margin: 0 35px;
 }
 .center_camera_wrapper img {
@@ -233,7 +260,7 @@
 }
 
 .camera-main-right .big_wrapper {
-  width: 100%;
+  width: 235px;
 }
 
 .cameras_menu {
@@ -259,20 +286,33 @@
 .camera-main-right .cyber_block,
 .center_camera_wrapper .wrapper,
 .camera-main-right .wrapper {
-  min-height: 620px;
+  min-height: 545px;
+}
+.profile_right_user_card .cyber_block {
+  background: #0f1020;
 }
 .profile_right_user_card h2,
 .profile_right_user_card p {
   line-height: 120%;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  font-size: 16px;
 }
 .profile_right_user_card p {
   display: flex;
   flex-direction: column;
+}
+.profile_right_user_card p:first-child {
+  font-size: 15px;
+  font-weight: 400;
 }
 
 .person-detected img {
   width: 100%;
   height: 220px;
   object-fit: cover;
+}
+
+.emotions_list p {
+   margin-bottom: 1px;
+   font-size: 14px;
 }

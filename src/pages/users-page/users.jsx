@@ -27,6 +27,7 @@ function Users({ mainURl }) {
   const [employerEmployerZip, setEmployerEmployerZip] = useState(null);
   const [employerLastName, setEmployerLastName] = useState("");
   const [employerMiddleName, setEmployerMiddleName] = useState("");
+  const [activeItem, setActiveItem] = useState();
 
   const token = sessionStorage.getItem("token");
 
@@ -280,6 +281,7 @@ function Users({ mainURl }) {
       );
   };
   const moveElementToEnd = () => {
+    setActiveItem();
     const newArray = employeesList.filter(
       (item) => item.employee_id !== employeesList[0].employee_id
     );
@@ -344,8 +346,8 @@ function Users({ mainURl }) {
                 .map((employer, index, self) => (
                   <div
                     className={
-                      marginNone < index && marginNone < 9
-                        ? "users_list_item mt_none"
+                      activeItem === employer.employee_id
+                        ? "users_list_item z_index_1111"
                         : "users_list_item"
                     }
                     key={employer.employee_id}
@@ -372,7 +374,10 @@ function Users({ mainURl }) {
                       onMouseEnter={() => setMarginNone(index)}
                       onMouseLeave={() => setMarginNone()}
                     >
-                      <div className="wrapper">
+                      <div
+                        className="wrapper"
+                        onClick={() => setActiveItem(employer.employee_id)}
+                      >
                         <div className="label-container__top">
                           <label htmlFor="" className="label-inner">
                             {employer.last_name} {employer.first_name[0]}.

@@ -28,6 +28,9 @@
   margin-top: -50px;
   transition: all 0.4s ease;
 }
+.z_index_1111 {
+  z-index: 1111 !important;
+}
 .users_list_item .cyber_block {
   height: 300px;
 }

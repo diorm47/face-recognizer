@@ -6,8 +6,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function StatisticPage({ mainURl }) {
-  const [series, setSeries] = useState([12, 5, 10, 3, 40, 20, 10]);
+  const [series, setSeries] = useState([40, 5, 10, 3, 10, 20, 10]);
   const [usersSeries, setUsersSeries] = useState([]);
+  const [employeesList, setEmployeesList] = useState([]);
   const [isFormVisible, setFormVisible] = useState(false);
   const [isSideBarVisible, setSidebarVisible] = useState(false);
 
@@ -24,7 +25,22 @@ function StatisticPage({ mainURl }) {
       navigate("/login");
     }
   }, [navigate, token]);
+  useEffect(() => {
+    let reqOptions = {
+      url: `${mainURl}employees/list/`,
+      method: "GET",
+      headers: headersList,
+    };
 
+    axios
+      .request(reqOptions)
+      .then((response) => {
+        setEmployeesList(response.data);
+      })
+      .catch((error) => {
+        console.error("Ошибка", error);
+      });
+  }, []);
   let headersList = {
     Accept: "*/*",
     "Content-Type": "application/json",
@@ -85,19 +101,19 @@ function StatisticPage({ mainURl }) {
         <div className="stats_wrapper">
           <div className="left_stats_list">
             <div className="left_stats_list_items">
-              {usersSeries &&
-                usersSeries.map((employer) => (
-                  <div key={employer.camera_id} className="stats_list_item">
+              {employeesList &&
+                employeesList.map((employer) => (
+                  <div key={employer.employee_id} className="stats_list_item">
                     <div className="big_wrapper">
                       <div className="wrapper">
                         <div className="label-container__top">
                           <label htmlFor="" className="label-inner">
-                            {employer.user_id}
+                            {employer.employee_id}
                           </label>
                         </div>
                         <div className="cyber_block">
                           <div className="cyber_block_inner">
-                            {employer.camera_url}
+                            {employer.last_name} {employer.first_name[0]}.
                           </div>
                         </div>
 
