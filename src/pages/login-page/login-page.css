@@ -43,7 +43,7 @@ body {
 }
 .lion_logo {
   width: 50%;
-  filter: hue-rotate(30deg);
+  /* filter: hue-rotate(30deg); */  
   margin: 0 auto;
 }
 .container {
@@ -99,6 +99,9 @@ body {
   height: 48px;
   position: absolute;
   bottom: 2px;
+}
+.st1 *  {
+  fill: #4ac5ff !important;
 }
 .editor-field__container:before,
 .editor-field__container:after {

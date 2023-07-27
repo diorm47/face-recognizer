@@ -7,7 +7,7 @@ import "./profile-page.css";
 
 function ProfilePage({ mainURl }) {
   const [isSideBarVisible, setSidebarVisible] = useState(false);
-  const [camera, setCamera] = useState("");
+  const [camera, setCamera] = useState([]);
   const [cameras, setCameras] = useState([]);
   const [detectedUserData, setDetectedUserData] = useState([]);
   const [detectedEmotion, setDetectedEmotion] = useState([]);
@@ -36,7 +36,7 @@ function ProfilePage({ mainURl }) {
       .request(reqOptions)
       .then((response) => {
         setCameras(response.data);
-        setCamera(response.data[0].address);
+        setCamera(response.data[0]);
       })
       .catch((error) => {
         console.error("Ошибка", error);
@@ -58,13 +58,15 @@ function ProfilePage({ mainURl }) {
     axios
       .request(reqOptions)
       .then((response) => {
-        setBufferData((prevData) => [...prevData, ...response.data]);
-        setDetectedUserData((prevArray) => [...prevArray, response.data[0]]);
+        const filteredData = response.data.filter(
+          (item) => item.camera_url === camera
+        );
+        setBufferData((prevData) => [...prevData, ...filteredData]);
+        setDetectedUserData((prevArray) => [...prevArray, filteredData[0]]);
         getDetectedUserLocal();
       })
       .catch((error) => {
         console.error("Ошибка", error);
-        getDetectedUserLocal();
       });
   };
 
@@ -78,19 +80,26 @@ function ProfilePage({ mainURl }) {
       axios
         .request(reqOptions)
         .then((response) => {
-          setDetectedUserData(response.data);
-          setBufferData((prevData) => [...prevData, ...response.data]);
+          const filteredData = response.data.filter(
+            (item) => item.camera_url === camera.address
+          );
+          console.log(response.data[0].camera_url);
+          setBufferData((prevData) => [...prevData, ...filteredData]);
+          setDetectedUserData((prevArray) => [...prevArray, ...filteredData]);
           if (response.data[0]) {
             getDetectedUserLocal();
           }
+
+          console.log("filteredData", filteredData);
         })
         .catch((error) => {
           console.error("Ошибка", error);
-          getDetectedUserLocal();
         });
     };
     getDetectedUser();
   }, []);
+  console.log(camera.address);
+
   const getDetectedEmotion = async () => {
     let reqOptions = {
       url: `${mainURl}stats/emotion`,
@@ -100,12 +109,14 @@ function ProfilePage({ mainURl }) {
     axios
       .request(reqOptions)
       .then((response) => {
-        setDetectedEmotion((prevArray) => [...prevArray, response.data[0]]);
+        const filteredData = response.data.filter(
+          (item) => item.camera_url === camera.address
+        );
+        setDetectedEmotion((prevArray) => [...prevArray, filteredData[0]]);
         getDetectedEmotion();
       })
       .catch((error) => {
         console.error("Ошибка", error);
-        getDetectedEmotion();
       });
   };
   useEffect(() => {
@@ -118,31 +129,33 @@ function ProfilePage({ mainURl }) {
       axios
         .request(reqOptions)
         .then((response) => {
-          setDetectedEmotion((prevArray) => [...prevArray, response.data[0]]);
+          const filteredData = response.data.filter(
+            (item) => item.camera_url === camera.address
+          );
+          setDetectedEmotion((prevArray) => [...prevArray, filteredData[0]]);
           getDetectedEmotion();
         })
         .catch((error) => {
           console.error("Ошибка", error);
-          getDetectedEmotion();
         });
     };
     getEmotion();
   }, []);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setDetectedUserData((prevData) => {
-        if (prevData.length > 0) {
-          return prevData.slice(1);
-        }
-        return prevData;
-      });
-    }, 15000);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     setDetectedUserData((prevData) => {
+  //       if (prevData.length > 0) {
+  //         return prevData.slice(1);
+  //       }
+  //       return prevData;
+  //     });
+  //   }, 15000);
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, []);
 
   return (
     <>
@@ -171,7 +184,7 @@ function ProfilePage({ mainURl }) {
                         <div
                           key={camera.name}
                           className="camera_list_item"
-                          onClick={() => setCamera(camera.address)}
+                          onClick={() => setCamera(camera)}
                         >
                           <div className="big_wrapper">
                             <div className="wrapper">
@@ -204,12 +217,12 @@ function ProfilePage({ mainURl }) {
                   <div className="wrapper">
                     <div className="label-container__top">
                       <label htmlFor="" className="label-inner">
-                        Nigoh Camera
+                        {camera.name || "Nigoh Camera"}
                       </label>
                     </div>
                     <div className="cyber_block">
                       <div className="cyber_block_inner">
-                        <img src={camera} alt="video oqim" />
+                        <img src={camera.address} alt="video oqim" />
                       </div>
                     </div>
 
