@@ -83,11 +83,9 @@ function LoadinPage() {
           </div>
         </div>
         <div className="editor-field editor-field__textbox">
-          <div className="editor-field__label-container">
-            <label className="editor-field__label">Loading</label>
-          </div>
+          <div className="editor-field__label-container"></div>
 
-          <div className="editor-field__container">
+          <div className="editor-field__container loading_step_bar">
             <div className="big_wrapper">
               <div className="wrapper">
                 <div className="doodle_loader">
@@ -98,8 +96,6 @@ function LoadinPage() {
               </div>
             </div>
           </div>
-          <span className="editor-field__bottom"></span>
-          <div className="editor-field__noise"></div>
         </div>
 
         <div className="terminal_wrapper">

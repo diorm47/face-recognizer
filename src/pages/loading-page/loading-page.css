@@ -172,7 +172,22 @@
   position: relative;
   border: 5px solid rgb(64, 159, 253);
   width: 500px;
-
+}
+.loading_step_bar {
+  width: 494px !important;
+  height: auto !important;
+  position: static !important;
+  clip-path: none !important;
+}
+.loading_step_bar::before {
+  display: none !important;
+}
+.loading_step_bar::after {
+  display: none !important;
+}
+.loading_page_wrapper {
+  width: 100%;
+  overflow: hidden;
 }
 
 .doodle_loader {

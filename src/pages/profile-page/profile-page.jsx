@@ -8,22 +8,28 @@ import "./profile-page.css";
 function ProfilePage({ mainURl }) {
   const [isSideBarVisible, setSidebarVisible] = useState(false);
   const [camera, setCamera] = useState([]);
+
   const [cameras, setCameras] = useState([]);
   const [detectedUserData, setDetectedUserData] = useState([]);
   const [detectedEmotion, setDetectedEmotion] = useState([]);
   const [activeItem, setActiveItem] = useState();
   const [bufferData, setBufferData] = useState([]);
   const bufferDataRef = useRef(bufferData);
+  const navigate = useNavigate();
+
+  const token = sessionStorage.getItem("token");
 
   useEffect(() => {
     bufferDataRef.current = bufferData;
   }, [bufferData]);
 
-  const token = sessionStorage.getItem("token");
   let headersList = {
     Accept: "*/*",
     Authorization: `Token ${token}`,
   };
+  useEffect(() => {
+    sessionStorage.setItem("active_camera_url", camera.address);
+  }, [camera]);
 
   useEffect(() => {
     let reqOptions = {
@@ -43,7 +49,6 @@ function ProfilePage({ mainURl }) {
       });
   }, []);
 
-  const navigate = useNavigate();
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -58,12 +63,20 @@ function ProfilePage({ mainURl }) {
     axios
       .request(reqOptions)
       .then((response) => {
-        const filteredData = response.data.filter(
-          (item) => item.camera_url === camera
-        );
-        setBufferData((prevData) => [...prevData, ...filteredData]);
-        setDetectedUserData((prevArray) => [...prevArray, filteredData[0]]);
-        getDetectedUserLocal();
+        if (
+          response.data[0].camera_url ===
+          sessionStorage.getItem("active_camera_url")
+        ) {
+          setBufferData((prevData) => [...prevData, ...response.data]);
+          setDetectedUserData((prevArray) => [
+            ...prevArray,
+            ...(response.data || []),
+          ]);
+        }
+
+        if (response.data[0]) {
+          getDetectedUserLocal();
+        }
       })
       .catch((error) => {
         console.error("Ошибка", error);
@@ -80,17 +93,20 @@ function ProfilePage({ mainURl }) {
       axios
         .request(reqOptions)
         .then((response) => {
-          const filteredData = response.data.filter(
-            (item) => item.camera_url === camera.address
-          );
-          console.log(response.data[0].camera_url);
-          setBufferData((prevData) => [...prevData, ...filteredData]);
-          setDetectedUserData((prevArray) => [...prevArray, ...filteredData]);
+          if (
+            response.data[0].camera_url ===
+            sessionStorage.getItem("active_camera_url")
+          ) {
+            setBufferData((prevData) => [...prevData, ...response.data]);
+            setDetectedUserData((prevArray) => [
+              ...prevArray,
+              ...(response.data || []),
+            ]);
+          }
+
           if (response.data[0]) {
             getDetectedUserLocal();
           }
-
-          console.log("filteredData", filteredData);
         })
         .catch((error) => {
           console.error("Ошибка", error);
@@ -98,7 +114,6 @@ function ProfilePage({ mainURl }) {
     };
     getDetectedUser();
   }, []);
-  console.log(camera.address);
 
   const getDetectedEmotion = async () => {
     let reqOptions = {
@@ -109,11 +124,19 @@ function ProfilePage({ mainURl }) {
     axios
       .request(reqOptions)
       .then((response) => {
-        const filteredData = response.data.filter(
-          (item) => item.camera_url === camera.address
-        );
-        setDetectedEmotion((prevArray) => [...prevArray, filteredData[0]]);
-        getDetectedEmotion();
+        if (
+          response.data[0].camera_url ===
+          sessionStorage.getItem("active_camera_url")
+        ) {
+          setDetectedEmotion((prevArray) => [
+            ...prevArray,
+            ...(response.data || []),
+          ]);
+        }
+
+        if (response.data[0]) {
+          getDetectedEmotion();
+        }
       })
       .catch((error) => {
         console.error("Ошибка", error);
@@ -129,10 +152,16 @@ function ProfilePage({ mainURl }) {
       axios
         .request(reqOptions)
         .then((response) => {
-          const filteredData = response.data.filter(
-            (item) => item.camera_url === camera.address
-          );
-          setDetectedEmotion((prevArray) => [...prevArray, filteredData[0]]);
+          if (
+            response.data[0].camera_url ===
+            sessionStorage.getItem("active_camera_url")
+          ) {
+            setDetectedEmotion((prevArray) => [
+              ...prevArray,
+              ...(response.data || []),
+            ]);
+          }
+
           getDetectedEmotion();
         })
         .catch((error) => {
@@ -156,6 +185,18 @@ function ProfilePage({ mainURl }) {
   //     clearInterval(intervalId);
   //   };
   // }, []);
+
+  const setActiveCamera = (item) => {
+
+    setCamera(item);
+    console.log(1, item.address);
+    console.log(2, sessionStorage.getItem("active_camera_url"));
+    if (item.address !== sessionStorage.getItem("active_camera_url")) {
+      setDetectedUserData([]);
+      setDetectedEmotion([]);
+    }
+    sessionStorage.setItem("active_camera_url", item.address);
+  };
 
   return (
     <>
@@ -184,7 +225,7 @@ function ProfilePage({ mainURl }) {
                         <div
                           key={camera.name}
                           className="camera_list_item"
-                          onClick={() => setCamera(camera)}
+                          onClick={() => setActiveCamera(camera)}
                         >
                           <div className="big_wrapper">
                             <div className="wrapper">
