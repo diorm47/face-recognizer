@@ -31,6 +31,7 @@
 }
 .login_btn {
   width: 170px;
+  margin-top: 20px !important;
 }
 .btn__container {
   display: flex;
@@ -43,7 +44,7 @@ body {
 }
 .lion_logo {
   width: 50%;
-  /* filter: hue-rotate(30deg); */  
+  /* filter: hue-rotate(30deg); */
   margin: 0 auto;
 }
 .container {
@@ -55,12 +56,12 @@ body {
   align-items: flex-end;
   text-align: center;
 }
-.login
-.editor-field {
+.login .editor-field {
   width: 100%;
   height: 64px;
   position: relative;
-  margin: 14px 0;
+
+  margin-bottom: 10px;
 }
 .editor-field .noise__el {
   fill: #67cfff;
@@ -100,7 +101,7 @@ body {
   position: absolute;
   bottom: 2px;
 }
-.st1 *  {
+.st1 * {
   fill: #4ac5ff !important;
 }
 .editor-field__container:before,
@@ -151,8 +152,7 @@ body {
   clip-path: polygon(0 0, calc(100% - 2px) 0%, 100% 100%, 0% 100%);
   bottom: 2px;
 }
-.login
-.editor-field__label {
+.login .editor-field__label {
   position: relative;
   display: block;
   height: 16px;

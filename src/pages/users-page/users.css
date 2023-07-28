@@ -1,6 +1,8 @@
 .users_page {
   width: 100%;
   height: auto;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .users_col {
@@ -115,6 +117,7 @@
   align-items: center;
   justify-content: center;
   padding-top: 40px;
+  overflow: hidden;
 }
 .form_users {
   width: 550px;
