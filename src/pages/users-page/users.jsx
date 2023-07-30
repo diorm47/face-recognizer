@@ -302,7 +302,7 @@ function Users({ mainURl }) {
         isSideBarVisible={isSideBarVisible}
       />
       <div className="users_page">
-        <div className="add_ser_btn">
+        <div className="add_ser_btn mt_40px">
           <div className="search_input">
             <div className="big_wrapper">
               <div className="wrapper">
@@ -616,7 +616,7 @@ function Users({ mainURl }) {
               <div className="right_employer_input">
                 <label htmlFor="employer_avatar">
                   <div className="add_ser_btn save_employer mb_20px">
-                    <div className="btn btn--primary login_btn">
+                    <div className="btn btn--primary ">
                       <div className="btn__container">Yuklash</div>
                       <div className="btn__bottom"></div>
                       <div className="btn__noise"></div>
@@ -625,7 +625,7 @@ function Users({ mainURl }) {
                 </label>
                 <label htmlFor="employer_zip">
                   <div className="add_ser_btn save_employer">
-                    <div className="btn btn--primary login_btn">
+                    <div className="btn btn--primary ">
                       <div className="btn__container">ZIP</div>
                       <div className="btn__bottom"></div>
                       <div className="btn__noise"></div>
@@ -649,7 +649,7 @@ function Users({ mainURl }) {
                 />
                 <div className="add_ser_btn save_employer">
                   <div
-                    className="btn btn--primary login_btn"
+                    className="btn btn--primary "
                     onClick={addEmployer}
                   >
                     <div className="btn__container">Saqlash</div>

@@ -9,6 +9,14 @@
   display: flex;
   justify-content: space-around;
 }
+.w_400p {
+  margin-bottom: 50px;
+}
+.w_400p,
+.w_400p .cyber_block,
+.w_400p .wrapper {
+  width: 400px !important;
+}
 
 .left_stats_list_items .stats_list_item {
   width: 400px;
@@ -72,7 +80,7 @@
   background: green;
 }
 .chart_legends .item_self:nth-child(5) div {
-  background: rgb(119, 93, 208) ;
+  background: rgb(119, 93, 208);
 }
 .chart_legends .item_self:nth-child(7) div {
   background: rgb(0, 143, 251);
@@ -83,6 +91,9 @@
 
 .right_chart_actions {
   margin-left: 100px;
+  display: flex;
+  align-items: start;
+  
 }
 
 .right_chart_actions button {
@@ -94,4 +105,29 @@
   outline: none;
   color: #fff;
   border-radius: 5px;
+}
+
+.date_calendar {
+  background: rgb(0, 143, 251);
+  border: none;
+  cursor: pointer;
+
+  cursor: pointer;
+  padding: 3px 8px;
+  background: rgb(0, 143, 251);
+  margin: 0 10px;
+  outline: none;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.stats_list_item_active .cyber_block_inner p{
+  color: rgb(0, 143, 251);
+}
+.from_to_date {
+  display: flex;
+  flex-direction: column;
+}
+.from_to_date input:first-child {
+  margin-bottom: 10px;
 }

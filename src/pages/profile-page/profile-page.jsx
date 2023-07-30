@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/sidebar/sidebar";
 import "../login-page/login-page.css";
 import "./profile-page.css";
+import FaceDetector from "../../components/face-detector/face-detector";
 
 function ProfilePage({ mainURl }) {
   const [isSideBarVisible, setSidebarVisible] = useState(false);
@@ -28,7 +29,7 @@ function ProfilePage({ mainURl }) {
     Authorization: `Token ${token}`,
   };
   useEffect(() => {
-    sessionStorage.setItem("active_camera_url", camera.address);
+    sessionStorage.setItem("active_camera_url", camera ? camera.address : "");
   }, [camera]);
 
   useEffect(() => {
@@ -187,10 +188,8 @@ function ProfilePage({ mainURl }) {
   // }, []);
 
   const setActiveCamera = (item) => {
-
     setCamera(item);
-    console.log(1, item.address);
-    console.log(2, sessionStorage.getItem("active_camera_url"));
+
     if (item.address !== sessionStorage.getItem("active_camera_url")) {
       setDetectedUserData([]);
       setDetectedEmotion([]);
@@ -198,6 +197,7 @@ function ProfilePage({ mainURl }) {
     sessionStorage.setItem("active_camera_url", item.address);
   };
 
+  console.log(camera);
   return (
     <>
       {isSideBarVisible ? (
@@ -258,12 +258,12 @@ function ProfilePage({ mainURl }) {
                   <div className="wrapper">
                     <div className="label-container__top">
                       <label htmlFor="" className="label-inner">
-                        {camera.name || "Nigoh Camera"}
+                        {camera ? camera.name : "Nigoh Camera"}
                       </label>
                     </div>
                     <div className="cyber_block">
                       <div className="cyber_block_inner">
-                        <img src={camera.address} alt="video oqim" />
+                        <FaceDetector camera={camera} />
                       </div>
                     </div>
 

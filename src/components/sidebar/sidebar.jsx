@@ -26,9 +26,9 @@ function Sidebar({ isSideBarVisible, setSidebarVisible }) {
                 <p>Bosh sahifa</p>
               </div>
             </NavLink>
-            <NavLink to="/statistic">
+            <NavLink to="/camera">
               <div className="sidebar_content_link">
-                <p>Statistika</p>
+                <p>Camera</p>
               </div>
             </NavLink>
             <NavLink to="/users">
@@ -36,9 +36,10 @@ function Sidebar({ isSideBarVisible, setSidebarVisible }) {
                 <p>Hodimlar</p>
               </div>
             </NavLink>
-            <NavLink to="/camera">
+
+            <NavLink to="/statistic">
               <div className="sidebar_content_link">
-                <p>Camera</p>
+                <p>Statistika</p>
               </div>
             </NavLink>
           </div>

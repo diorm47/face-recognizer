@@ -18,6 +18,12 @@
 .users_page_sidebar .sidebar_wrapper {
   margin-top: 225px;
 }
+.mt_40px {
+  margin-top: 50px !important;
+}
+.right_employer_input .btn {
+  width: 170px;
+}
 
 .users_list_item {
   width: 600px;
@@ -99,7 +105,7 @@
   margin-top: 0 !important;
 }
 .right_employer_desc p {
-  margin-bottom: 19px;
+  margin-bottom: 15px;
   font-size: 19px;
   margin-left: 10px;
 }
@@ -150,9 +156,9 @@
 }
 
 .right_employer_desc div {
-  margin-bottom: 7px;
+ 
   display: flex;
-  align-items: center;
+  /* align-items: center; */
 }
 .right_employer_desc div p:first-child {
   margin-right: 8px;
