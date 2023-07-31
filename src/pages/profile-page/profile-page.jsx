@@ -69,10 +69,10 @@ function ProfilePage({ mainURl }) {
           sessionStorage.getItem("active_camera_url")
         ) {
           setBufferData((prevData) => [...prevData, ...response.data]);
-          setDetectedUserData((prevArray) => [
-            ...prevArray,
-            ...(response.data || []),
-          ]);
+          setDetectedUserData((prevData) => ({
+            ...prevData,
+            [response.data[0].user_id]: response.data[0] || [],
+          }));
         }
 
         if (response.data[0]) {
@@ -99,10 +99,10 @@ function ProfilePage({ mainURl }) {
             sessionStorage.getItem("active_camera_url")
           ) {
             setBufferData((prevData) => [...prevData, ...response.data]);
-            setDetectedUserData((prevArray) => [
-              ...prevArray,
-              ...(response.data || []),
-            ]);
+            setDetectedUserData((prevData) => ({
+              ...prevData,
+              [response.data[0].user_id]: response.data[0] || [],
+            }));
           }
 
           if (response.data[0]) {
@@ -129,10 +129,10 @@ function ProfilePage({ mainURl }) {
           response.data[0].camera_url ===
           sessionStorage.getItem("active_camera_url")
         ) {
-          setDetectedEmotion((prevArray) => [
-            ...prevArray,
-            ...(response.data || []),
-          ]);
+          setDetectedEmotion((prevData) => ({
+            ...prevData,
+            [response.data[0].user_id]: response.data[0] || [],
+          }));
         }
 
         if (response.data[0]) {
@@ -157,10 +157,10 @@ function ProfilePage({ mainURl }) {
             response.data[0].camera_url ===
             sessionStorage.getItem("active_camera_url")
           ) {
-            setDetectedEmotion((prevArray) => [
-              ...prevArray,
-              ...(response.data || []),
-            ]);
+            setDetectedEmotion((prevData) => ({
+              ...prevData,
+              [response.data[0].user_id]: response.data[0] || [],
+            }));
           }
 
           getDetectedEmotion();
@@ -172,21 +172,6 @@ function ProfilePage({ mainURl }) {
     getEmotion();
   }, []);
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     setDetectedUserData((prevData) => {
-  //       if (prevData.length > 0) {
-  //         return prevData.slice(1);
-  //       }
-  //       return prevData;
-  //     });
-  //   }, 15000);
-
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, []);
-
   const setActiveCamera = (item) => {
     setCamera(item);
 
@@ -197,7 +182,36 @@ function ProfilePage({ mainURl }) {
     sessionStorage.setItem("active_camera_url", item.address);
   };
 
-  console.log(camera);
+  useEffect(() => {
+    const timers = Object.keys(detectedUserData).map((userId) =>
+      setTimeout(() => {
+        setDetectedUserData((prevData) => {
+          delete prevData[userId];
+          return { ...prevData };
+        });
+      }, 15000)
+    );
+
+    return () => {
+      timers.forEach((timer) => clearTimeout(timer));
+    };
+  }, [detectedUserData]);
+
+  useEffect(() => {
+    const timers = Object.keys(detectedEmotion).map((userId) =>
+      setTimeout(() => {
+        setDetectedEmotion((prevData) => {
+          delete prevData[userId];
+          return { ...prevData };
+        });
+      }, 15000)
+    );
+
+    return () => {
+      timers.forEach((timer) => clearTimeout(timer));
+    };
+  }, [detectedEmotion]);
+
   return (
     <>
       {isSideBarVisible ? (
@@ -263,7 +277,8 @@ function ProfilePage({ mainURl }) {
                     </div>
                     <div className="cyber_block">
                       <div className="cyber_block_inner">
-                        <FaceDetector camera={camera} />
+                        {/* <FaceDetector camera={camera} /> */}
+                        <img src={camera.address} alt={camera.address} />
                       </div>
                     </div>
 
@@ -279,169 +294,86 @@ function ProfilePage({ mainURl }) {
 
               <div className="camera-main-right">
                 {detectedUserData &&
-                  detectedUserData.map((data, index) => (
-                    <div
-                      className={
-                        activeItem === index
-                          ? "big_wrapper profile_right_user_card z_index_top"
-                          : "big_wrapper profile_right_user_card"
-                      }
-                      key={index}
-                      onClick={() => setActiveItem(index)}
-                    >
-                      <div className="wrapper">
-                        <div className="label-container__top">
-                          <label htmlFor="" className="label-inner">
-                            {data.last_name} {data.first_name[0]}.
-                          </label>
-                        </div>
-                        <div className="cyber_block">
-                          <div className="cyber_block_inner">
-                            <div className="person-detected">
-                              <img src={data.image} alt="detected_image" />
-                              <div className="person-datas">
-                                <h2>
-                                  {data.last_name} {data.first_name}
-                                </h2>
-                                <p>
-                                  <b>ID:</b> {data.user_id}
-                                </p>
-                                <p>
-                                  <b>Unvon:</b> {data.rank}
-                                </p>
-                                <p>
-                                  <b>Lavozim:</b> {data.position}
-                                </p>
-                                <p className="emotions_list">
-                                  <b>Kayfiyat:</b>
-                                  {detectedEmotion &&
-                                  detectedEmotion[index] &&
-                                  detectedEmotion[index].emotion &&
-                                  detectedEmotion[index].emotion.neytral ? (
-                                    <p>
-                                      Neytral -{" "}
-                                      {detectedEmotion &&
-                                        detectedEmotion[index] &&
-                                        detectedEmotion[index].emotion &&
-                                        detectedEmotion[index].emotion
-                                          .neytral}{" "}
-                                      %
-                                    </p>
-                                  ) : (
-                                    ""
-                                  )}
-                                  {detectedEmotion &&
-                                  detectedEmotion[index] &&
-                                  detectedEmotion[index].emotion &&
-                                  detectedEmotion[index].emotion.jahldorlik ? (
-                                    <p>
-                                      Jahldorlik -
-                                      {detectedEmotion &&
-                                        detectedEmotion[index] &&
-                                        detectedEmotion[index].emotion &&
-                                        detectedEmotion[index].emotion
-                                          .jahldorlik}{" "}
-                                      %
-                                    </p>
-                                  ) : (
-                                    ""
-                                  )}
-                                  {detectedEmotion &&
-                                  detectedEmotion[index] &&
-                                  detectedEmotion[index].emotion &&
-                                  detectedEmotion[index].emotion
-                                    .xursandchilik ? (
-                                    <p>
-                                      Xursandchilik -
-                                      {detectedEmotion &&
-                                        detectedEmotion[index] &&
-                                        detectedEmotion[index].emotion &&
-                                        detectedEmotion[index].emotion
-                                          .xursandchilik}{" "}
-                                      %
-                                    </p>
-                                  ) : (
-                                    ""
-                                  )}
-                                  {detectedEmotion &&
-                                  detectedEmotion[index] &&
-                                  detectedEmotion[index].emotion &&
-                                  detectedEmotion[index].emotion.havotir ? (
-                                    <p>
-                                      Havotir -
-                                      {detectedEmotion &&
-                                        detectedEmotion[index] &&
-                                        detectedEmotion[index].emotion &&
-                                        detectedEmotion[index].emotion
-                                          .havotir}{" "}
-                                      %
-                                    </p>
-                                  ) : (
-                                    ""
-                                  )}
-                                  {detectedEmotion &&
-                                  detectedEmotion[index] &&
-                                  detectedEmotion[index].emotion &&
-                                  detectedEmotion[index].emotion.behuzur ? (
-                                    <p>
-                                      Behuzur -
-                                      {detectedEmotion &&
-                                        detectedEmotion[index] &&
-                                        detectedEmotion[index].emotion &&
-                                        detectedEmotion[index].emotion
-                                          .behuzur}{" "}
-                                      %
-                                    </p>
-                                  ) : (
-                                    ""
-                                  )}
-                                  {detectedEmotion &&
-                                  detectedEmotion[index] &&
-                                  detectedEmotion[index].emotion &&
-                                  detectedEmotion[index].emotion.gamgin ? (
-                                    <p>
-                                      G'amgin -
-                                      {detectedEmotion &&
-                                        detectedEmotion[index] &&
-                                        detectedEmotion[index].emotion &&
-                                        detectedEmotion[index].emotion
-                                          .gamgin}{" "}
-                                      %
-                                    </p>
-                                  ) : (
-                                    ""
-                                  )}
-                                  {detectedEmotion &&
-                                  detectedEmotion[index] &&
-                                  detectedEmotion[index].emotion &&
-                                  detectedEmotion[index].emotion.xayron ? (
-                                    <p>
-                                      Xayron -
-                                      {detectedEmotion &&
-                                        detectedEmotion[index] &&
-                                        detectedEmotion[index].emotion &&
-                                        detectedEmotion[index].emotion
-                                          .xayron}{" "}
-                                      %
-                                    </p>
-                                  ) : (
-                                    ""
-                                  )}
-                                </p>
+                  detectedEmotion &&
+                  Object.keys(detectedUserData).map((userId, index) => {
+                    const data = detectedUserData[userId];
+                    const emotion = detectedEmotion[userId]?.emotion;
+
+                    return (
+                      <div
+                        className={
+                          activeItem === index
+                            ? "big_wrapper profile_right_user_card z_index_top"
+                            : "big_wrapper profile_right_user_card"
+                        }
+                        key={index}
+                        onClick={() => setActiveItem(index)}
+                      >
+                        <div className="wrapper">
+                          <div className="label-container__top">
+                            <label htmlFor="" className="label-inner">
+                              {data.last_name} {data.first_name[0]}.
+                            </label>
+                          </div>
+                          <div className="cyber_block">
+                            <div className="cyber_block_inner">
+                              <div className="person-detected">
+                                <img src={data.image} alt="detected_image" />
+                                <div className="person-datas">
+                                  <h2>
+                                    {data.last_name} {data.first_name}
+                                  </h2>
+                                  <p>
+                                    <b>ID:</b> {data.user_id}
+                                  </p>
+                                  <p>
+                                    <b>Unvon:</b> {data.rank}
+                                  </p>
+                                  <p>
+                                    <b>Lavozim:</b> {data.position}
+                                  </p>
+                                  <div className="emotions_list">
+                                    <b>Kayfiyat:</b>
+                                    {emotion?.neytral ? (
+                                      <p>Neytral - {emotion.neytral} %</p>
+                                    ) : null}
+                                    {emotion?.jahldorlik ? (
+                                      <p>Jahldorlik - {emotion.jahldorlik} %</p>
+                                    ) : null}
+                                    {emotion?.xursanchilik ? (
+                                      <p>
+                                        Xursandchilik - {emotion.xursanchilik}{" "}
+                                        %
+                                      </p>
+                                    ) : null}
+                                    {emotion?.xavotir ? (
+                                      <p>Xavotir - {emotion.xavotir} %</p>
+                                    ) : null}
+                                    {emotion?.behuzur ? (
+                                      <p>Behuzur - {emotion.behuzur} %</p>
+                                    ) : null}
+                                    {emotion?.gamgin ? (
+                                      <p>G'amgin - {emotion.gamgin} %</p>
+                                    ) : null}
+                                    {emotion?.hayron ? (
+                                      <p>Xayron - {emotion.hayron} %</p>
+                                    ) : null}
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="label-container__bottom">
-                          <label htmlFor="" className="label-inner">
-                            {" "}
-                            - - -{" "}
-                          </label>
+                          <div className="label-container__bottom">
+                            <label htmlFor="" className="label-inner">
+                              {" "}
+                              - - -{" "}
+                            </label>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
               </div>
             </div>
           </div>

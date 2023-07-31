@@ -96,9 +96,9 @@ function StatisticPage({ mainURl }) {
     },
   };
 
-  const allStat = () => {
+  const allStat = (id) => {
     let reqOptions = {
-      url: `${mainURl}stats/list/?user=${serchingUserId}`,
+      url: `${mainURl}stats/list/?user=${id || serchingUserId}`,
       method: "GET",
       headers: headersList,
     };
@@ -107,7 +107,8 @@ function StatisticPage({ mainURl }) {
       method: "GET",
       headers: headersList,
     };
-    if (serchingUserId) {
+
+    if (!id.button === 0 || serchingUserId) {
       axios
         .request(reqOptions)
         .then((response) => {
@@ -334,6 +335,41 @@ function StatisticPage({ mainURl }) {
       }
     }
   };
+  const setActiveUser = async (id) => {
+    setSerchingUserId(id);
+    let reqOptions = {
+      url: `${mainURl}stats/list/?user=${id}`,
+      method: "GET",
+      headers: headersList,
+    };
+    let reqOptionsAll = {
+      url: `${mainURl}stats/list/`,
+      method: "GET",
+      headers: headersList,
+    };
+
+    if (id === serchingUserId) {
+      setSerchingUserId("");
+      axios
+        .request(reqOptionsAll)
+        .then((response) => {
+          setUsersSeries(response.data);
+        })
+        .catch((error) => {
+          console.error("Ошибка", error);
+        });
+    } else {
+      axios
+        .request(reqOptions)
+        .then((response) => {
+          setUsersSeries(response.data);
+        })
+        .catch((error) => {
+          console.error("Ошибка", error);
+        });
+    }
+  };
+
   return (
     <>
       {isFormVisible || isSideBarVisible ? (
@@ -386,7 +422,7 @@ function StatisticPage({ mainURl }) {
                           ? "stats_list_item stats_list_item_active"
                           : "stats_list_item"
                       }
-                      onClick={() => setSerchingUserId(employer.employee_id)}
+                      onClick={() => setActiveUser(employer.employee_id)}
                     >
                       <div className="big_wrapper">
                         <div className="wrapper">

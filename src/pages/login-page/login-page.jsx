@@ -10,8 +10,9 @@ function LoginPage({ mainURl }) {
   const [password, setPassword] = useState();
   const [hidedSnack, setHidedSnack] = useState(true);
   const [snackBarText, setSnackBarText] = useState("");
+  const [apiAdressValue, setApiAdressValue] = useState("");
   const navigate = useNavigate();
-
+  const [isFormVisible, setFormVisible] = useState(false);
   const loginClick = async () => {
     let headersList = {
       Accept: "*/*",
@@ -60,9 +61,82 @@ function LoginPage({ mainURl }) {
       }, 3000);
     }
   };
+
+  const handleModalOverlay = () => {
+    setFormVisible(false);
+  };
+  const apiAdressBtn = () => {
+    if (apiAdressValue) {
+      localStorage.setItem("apiAdress", apiAdressValue);
+      setFormVisible(false);
+      setHidedSnack(false);
+      setSnackBarText("IP manzil muvafaqqiyatli kiritildi!");
+    } else {
+      setHidedSnack(false);
+      setSnackBarText("Iltimos ma'lumotlarni kiriting");
+    }
+    setTimeout(() => {
+      setHidedSnack(true);
+    }, 3000);
+  };
   return (
     <>
+      <div
+        className="btn btn--primary login_btn setting_icon"
+        onClick={() => setFormVisible(true)}
+      >
+        <div className="btn__container">Sozlamalar</div>
+        <div className="btn__bottom"></div>
+        <div className="btn__noise"></div>
+      </div>
       <Snackbar hidedSnack={hidedSnack} snackBarText={snackBarText} />
+      {isFormVisible ? (
+        <>
+          <div className="dark_bg_overlay" onClick={handleModalOverlay}></div>
+          <div className="add_user_from">
+            <div className="form_users">
+              <div className="big_wrapper ">
+                <div className="wrapper">
+                  <div className="label-container__top">
+                    <label htmlFor="" className="label-inner">
+                      Server IP manzili
+                    </label>
+                  </div>
+                  <div className="cyber_block">
+                    <div className="cyber_block_inner">
+                      <input
+                        type="text"
+                        className="editor-field__input"
+                        // value={cameraIP}
+                        onChange={(e) => setApiAdressValue(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="label-container__bottom">
+                    <label htmlFor="" className="label-inner">
+                      {" "}
+                      - - -{" "}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div className="add_camera_btn" onClick={apiAdressBtn}>
+                <div className="add_ser_btn df_aie_jce">
+                  <div className="btn btn--primary login_btn">
+                    <div className="btn__container">Saqlash</div>
+                    <div className="btn__bottom"></div>
+                    <div className="btn__noise"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        ""
+      )}
+
       <div className="login">
         <div className="container">
           <Logo className="lion_logo" />

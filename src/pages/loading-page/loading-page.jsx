@@ -1,21 +1,73 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./loading-page.css";
+import axios from "axios";
 
-function LoadinPage() {
+function LoadinPage({ mainURl }) {
   const [loadingIncrement, incrementLoadinf] = useState([0]);
+  const [cameras, setCameras] = useState([]);
+  const [ipUser, setIpUser] = useState("");
+  const [ipUserAdress, setIpUserAdress] = useState("");
   const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
-
+  let headersList = {
+    Accept: "*/*",
+    "Content-Type": "application/json",
+    Authorization: `Token ${token}`,
+  };
   useEffect(() => {
     if (!token) {
       navigate("/login");
     }
   }, [navigate, token]);
+  useEffect(() => {
+    let reqOptions = {
+      url: `${mainURl}ip/list/`,
+      method: "GET",
+      headers: headersList,
+    };
+
+    axios
+      .request(reqOptions)
+      .then((response) => {
+        setCameras(response.data);
+        localStorage.setItem("camera", response.data[0].address);
+      })
+      .catch((error) => {
+        console.error("Ошибка", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    let reqOptions = {
+      url: "https://ipwho.is/",
+      method: "GET",
+      headers: headersList,
+    };
+
+    axios
+      .request(reqOptions)
+      .then((response) => {
+        setIpUser(response.data);
+        setIpUserAdress(response.data.ip);
+        localStorage.setItem("ip", response.data.ip);
+      })
+      .catch((error) => {
+        console.error("Ошибка", error);
+      });
+  }, []);
+
+  console.log(ipUser);
+  var today = new Date();
+
+  var thisTime = today.toLocaleString();
+
   const data = [
     {
-      AboutDevTypeText:
-        "<span>> Are you gay ?<br/>> And why are you gay ?</span><br/><span>> You are gay!</span><br/><span>> Hello my neighbours!</span><br/><span>> Ey fuck you!</span><br/><span>> Yes, yes, fuck you tooo!</span><br/>",
+      AboutDevTypeText: `</span><br/><span>> AUTHORIZED SUCCESSFULY! </span><br/> <span>> ${thisTime}<br/>> CONNECTION ${localStorage.getItem(
+        "ip"
+      )}  </span><br/><span>> LOCATION 41.0058° N, 71.6436° E </span><br/>
+      <span>> CAM CONNECTION ${localStorage.getItem("camera") || "CONNECTED"}</span>`,
     },
   ];
   useEffect(() => {
@@ -37,7 +89,7 @@ function LoadinPage() {
         if (char === "<") isTag = true;
         if (char === ">") isTag = false;
         if (isTag) return type();
-        setTimeout(type, 60);
+        setTimeout(type, 20);
       };
 
       type();
@@ -55,7 +107,7 @@ function LoadinPage() {
         }
         return prevElements;
       });
-    }, 500);
+    }, 300);
 
     return () => {
       clearInterval(interval);

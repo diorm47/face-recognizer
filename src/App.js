@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function App() {
-  const mainURl = `http://192.168.1.208:12345/`;
+  const mainURl = localStorage.getItem("apiAdress");
   const token = sessionStorage.getItem("token");
   const navigate = useNavigate();
   useEffect(() => {
@@ -24,12 +24,15 @@ function App() {
     <>
       <Routes>
         <Route path="/" exact element={<LoginPage mainURl={mainURl} />} />
-        <Route path="/loading" exact element={<LoadinPage />} />
+        <Route
+          path="/loading"
+          exact
+          element={<LoadinPage mainURl={mainURl} />}
+        />
         <Route path="/login" element={<LoginPage mainURl={mainURl} />} />
         <Route path="/profile" element={<ProfilePage mainURl={mainURl} />} />
         <Route path="/users" element={<Users mainURl={mainURl} />} />
         <Route path="/camera" element={<CameraPage mainURl={mainURl} />} />
-
         <Route
           path="/statistic"
           element={<StatisticPage mainURl={mainURl} />}

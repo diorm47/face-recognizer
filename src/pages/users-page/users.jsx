@@ -208,15 +208,21 @@ function Users({ mainURl }) {
     setUserUpdating(true);
   };
   const updateEmployerData = () => {
-    let reqOptions_2 = {
-      url: `${mainURl}employees/create/`,
-      method: "POST",
-      headers: headersList,
-    };
+    const formData = new FormData();
+    formData.append("employee_id", employerID);
+    formData.append("first_name", employerName);
+    formData.append("rank", employerRank);
+    formData.append("position", employerPostion);
+    formData.append("main_image", employerAvatarForSend || employerAvatar);
+    formData.append("last_name", employerLastName);
+    formData.append("middle_name", employerMiddleName);
+    // formData.append("images", employerEmployerZip);
+
     let reqOptions_1 = {
-      url: `${mainURl}employees/${updatingUserID}/delete/`,
-      method: "DELETE",
+      url: `${mainURl}employees/${updatingUserID}/edit/`,
+      method: "PUT",
       headers: headersList,
+      data: formData,
     };
 
     if (
@@ -230,9 +236,6 @@ function Users({ mainURl }) {
     ) {
       axios
         .request(reqOptions_1)
-        .then(() => {
-          addEmployer();
-        })
         .then(() => {
           setHidedSnack(false);
           setSnackBarText("Hodim ma'lumotlari yangilandi");
@@ -648,10 +651,7 @@ function Users({ mainURl }) {
                   onChange={saveZip}
                 />
                 <div className="add_ser_btn save_employer">
-                  <div
-                    className="btn btn--primary "
-                    onClick={addEmployer}
-                  >
+                  <div className="btn btn--primary " onClick={addEmployer}>
                     <div className="btn__container">Saqlash</div>
                     <div className="btn__bottom"></div>
                     <div className="btn__noise"></div>
@@ -848,7 +848,7 @@ function Users({ mainURl }) {
               <div className="right_employer_input">
                 <label htmlFor="employer_avatar">
                   <div className="add_ser_btn save_employer">
-                    <div className="btn btn--primary login_btn">
+                    <div className="btn btn--primary">
                       <div className="btn__container">Yuklash</div>
                       <div className="btn__bottom"></div>
                       <div className="btn__noise"></div>
@@ -857,7 +857,7 @@ function Users({ mainURl }) {
                 </label>
                 <label htmlFor="employer_zip">
                   <div className="add_ser_btn save_employer">
-                    <div className="btn btn--primary login_btn">
+                    <div className="btn btn--primary ">
                       <div className="btn__container">ZIP</div>
                       <div className="btn__bottom"></div>
                       <div className="btn__noise"></div>
@@ -881,7 +881,7 @@ function Users({ mainURl }) {
                 />
                 <div className="add_ser_btn save_employer">
                   <div
-                    className="btn btn--primary login_btn"
+                    className="btn btn--primary "
                     onClick={updateEmployerData}
                   >
                     <div className="btn__container">Saqlash</div>
