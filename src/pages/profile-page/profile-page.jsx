@@ -212,6 +212,7 @@ function ProfilePage({ mainURl }) {
     };
   }, [detectedEmotion]);
 
+  console.log(camera);
   return (
     <>
       {isSideBarVisible ? (
@@ -278,7 +279,13 @@ function ProfilePage({ mainURl }) {
                     <div className="cyber_block">
                       <div className="cyber_block_inner">
                         {/* <FaceDetector camera={camera} /> */}
-                        <img src={camera.address} alt={camera.address} />
+                        <img
+                          src={
+                            "http://192.168.1.83:18687/ip/stream/?camera=" +
+                            camera.address
+                          }
+                          alt={camera.name}
+                        />
                       </div>
                     </div>
 
@@ -342,8 +349,7 @@ function ProfilePage({ mainURl }) {
                                     ) : null}
                                     {emotion?.xursanchilik ? (
                                       <p>
-                                        Xursandchilik - {emotion.xursanchilik}{" "}
-                                        %
+                                        Xursandchilik - {emotion.xursanchilik} %
                                       </p>
                                     ) : null}
                                     {emotion?.xavotir ? (
