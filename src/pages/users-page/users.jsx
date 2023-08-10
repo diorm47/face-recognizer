@@ -122,6 +122,19 @@ function Users({ mainURl }) {
             setHidedSnack(true);
           }, 3000);
           handleModalOverlay();
+
+          setUpdatingUserID();
+          setEmployerID();
+          setEmployerRank();
+          setEmployerPostion();
+          setEmployerName();
+          setEmployerAvatar();
+          setEmployerAvatarForSend();
+          setEmployerLastName();
+          setEmployerMiddleName();
+          setUserUpdating(false);
+
+
         })
         .catch((error) => {
           setHidedSnack(false);

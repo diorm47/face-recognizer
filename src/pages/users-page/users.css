@@ -37,7 +37,7 @@
   transition: all 0.4s ease;
 }
 .z_index_1111 {
-  z-index: 1111 !important;
+  z-index: 1000 !important;
 }
 .users_list_item .cyber_block {
   height: 300px;
@@ -124,10 +124,11 @@
   justify-content: center;
   padding-top: 40px;
   overflow: hidden;
+
 }
 .form_users {
   width: 550px;
-  z-index: 999;
+  z-index: 1111;
 
   padding: 0 30px;
   padding-bottom: 0;

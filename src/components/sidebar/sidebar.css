@@ -8,7 +8,7 @@
 .sidebar_content {
   width: 400px;
   height: 90vh;
-  z-index: 333;
+  z-index: 3333;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
   position: fixed;
@@ -119,17 +119,14 @@
   align-items: center;
   justify-content: center;
 }
-.sidebar_content
-.editor-field__label-container:after {
+.sidebar_content .editor-field__label-container:after {
   bottom: 2px;
 }
-.sidebar_content
-.editor-field__label-container {
+.sidebar_content .editor-field__label-container {
   position: absolute;
   top: 0px;
   height: 50px !important;
   width: 120px;
   height: 50px;
   bottom: 0;
-  
 }

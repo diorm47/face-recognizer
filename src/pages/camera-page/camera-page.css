@@ -1,6 +1,10 @@
 .camera_page {
   width: 100%;
 }
+.camera_page 
+.camera_list {
+   overflow-x: hidden;
+}
 .camera_wrapper {
   display: flex;
   align-items: start;

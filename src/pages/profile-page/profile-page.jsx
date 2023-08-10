@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/sidebar/sidebar";
 import "../login-page/login-page.css";
 import "./profile-page.css";
-import FaceDetector from "../../components/face-detector/face-detector";
+
 
 function ProfilePage({ mainURl }) {
   const [isSideBarVisible, setSidebarVisible] = useState(false);
@@ -281,7 +281,7 @@ function ProfilePage({ mainURl }) {
                         {/* <FaceDetector camera={camera} /> */}
                         <img
                           src={
-                            "http://192.168.1.83:18687/ip/stream/?camera=" +
+                            mainURl + "/ip/stream/?camera=" +
                             camera.address
                           }
                           alt={camera.name}

@@ -263,11 +263,15 @@ function CameraPage({ mainURl }) {
                   <div className="cyber_block">
                     <div className="cyber_block_inner">
                       <img
+
+
                         src={
-                          "http://192.168.1.83:18687/ip/stream/?camera=" +
+                          mainURl + "/ip/stream/?camera=" +
                           activeCamera.address
                         }
-                        alt="video_feed"
+                        alt={activeCamera.address}
+
+
                       />
                     </div>
                   </div>
